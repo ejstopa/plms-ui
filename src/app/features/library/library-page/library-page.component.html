@@ -1,0 +1,15 @@
+<div class="d-flex flex-column p-2 overflow-auto main-pages-height">
+    <div class="d-flex align-items-end" >
+        <h4 class="pages-link" routerLink="/library/diretorios">Library</h4>
+        @if (activeDirectory()){
+            <h4 class="mx-1">/</h4>
+            <h5>{{activeDirectory()!.name}}</h5>
+        }
+    </div>
+    <div class="bg-success my-1">
+        Toolbar
+    </div>
+    <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
+        <router-outlet></router-outlet>
+    </div>
+</div>

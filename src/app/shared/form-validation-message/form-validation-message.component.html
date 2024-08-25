@@ -1,0 +1,32 @@
+
+@if (validationErrors){
+    @if (validationErrors["required"]){
+        <small class="text-warning"> Campo obrigatório</small>
+    }
+    @if (validationErrors["minlength"]){
+        <small class="text-warning">
+            Mínimo {{validationErrors["minlength"].requiredLength}} caracteres
+        </small>
+    }
+    @if (validationErrors["maxlength"]){
+        <small class="text-warning">
+            Máximo {{validationErrors["maxlength"].requiredLength}} caracteres
+        </small>
+    }
+    @if (validationErrors["min"]){
+        <small class="text-warning">
+            Valor mínimo {{validationErrors["min"].min}}
+        </small>
+    }
+    @if (validationErrors["max"]){
+        <small class="text-warning">
+            Valor máximo {{validationErrors["max"].max}}
+        </small>
+    }
+    @if (validationErrors["email"]){
+        <small class="text-warning">
+            Formato inválido
+        </small>
+    }
+    
+}

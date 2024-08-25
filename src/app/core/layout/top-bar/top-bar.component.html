@@ -1,0 +1,27 @@
+<header class="d-flex shadow px-2 py-1 bg-primary-dark border-bottom border-black text-secondary align-items-end">
+    <img class="px-logo p-0 m-0" src="images/px-logo1.png" alt="logo">
+
+    @if (isConnectedToCreo()){
+    <div class="d-flex ms-auto me-3 mb-0 pb-0 align-items-end">
+        <img class="creo-logo mb-1 border border-primary" src="images/creologo.ico" alt="logo-creo">
+        <small class="ms-1 mb-0 pb-0">Conectado</small>
+    </div>
+    }
+
+    <div class="dropdown" [class.ms-auto]="!isConnectedToCreo()">
+        <button class="btn btn-primary text-secondary btn-sm py-1" type="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-user"></i>
+            <span class="ms-1">{{user()?.name}}</span>
+            <i class="fa-solid fa-ellipsis-vertical ms-2"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <a class="dropdown-item">Editar</a>
+            </li>
+            <li>
+                <a class="dropdown-item">Sair</a>
+            </li>
+        </ul>
+    </div>
+
+</header>

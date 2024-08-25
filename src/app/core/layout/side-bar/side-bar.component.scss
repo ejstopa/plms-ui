@@ -1,0 +1,23 @@
+@import '../../../../scss-variables.scss';
+
+#collapse-toggler:hover{
+    cursor: pointer;
+}
+
+.list-group-item:hover{
+    cursor: pointer;
+    background-color: $color-primary-light;
+}
+
+.list-group-item{
+    background-color: $color-primary;
+    color: $color-secondary;
+    border-width: 0px;
+}
+
+.list-group-item.active{
+    background-color: $color-primary-dark;
+    color: $color-secondary;
+    border-width: 0px;
+    // border-color: $color-secondary;
+}

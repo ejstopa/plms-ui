@@ -1,0 +1,12 @@
+@use '../../../../scss-variables' as variables;
+
+.img-folder{
+    height: 1rem;
+    width: auto;
+}
+
+.directory-descriptor:hover{
+    background-color: variables.$color-secondary;
+    text-decoration: underline;
+    cursor: pointer;
+}

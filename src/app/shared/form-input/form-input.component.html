@@ -1,0 +1,17 @@
+<div class="mb-3">
+    <div class="d-flex align-items-center">
+        <label class="form-label mb-0">{{labelText()}}</label>
+        @if (type() == "password"){
+        <i [class]="showPassword()? 'fa-solid fa-eye-slash fa-sm ms-auto me-2' : 'fa-solid fa-eye fa-sm ms-auto me-2'"
+            [attr.title]="showPassword()? 'Esconder senha' : 'Mostrar senha'"
+            id="showPasswordToggle" (click)="toggleShowPassword()"></i>
+        }
+    </div>
+    <input class="form-control" [type]="inputType()" [(ngModel)]="inputValue" (focus)="onTouched && onTouched()"
+        (input)="onChange && onChange(inputValue)" [disabled]="isDisabled">
+    @if (ngControl){
+    @if (ngControl.invalid && showValidationError()){
+    <app-form-validation-message [validationErrors]="ngControl.errors!" />
+    }
+    }
+</div>

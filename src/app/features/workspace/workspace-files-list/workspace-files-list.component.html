@@ -1,0 +1,4 @@
+@for(file of files(); track $index){
+<app-workspace-file-item [file]="file" [creConnected]="creoConnected()" (selected)="addSelectedFile($event)"
+    (unselected)="removeSelectedFile($event)" (openClicked)="onOpenFileClicked($event)" />
+}
