@@ -1,8 +1,8 @@
-export interface WorkspaceFileModel {
+export interface FileData {
     name: string;
     extension: string;
     fullPath: string;
     lastModifiedAt: Date;
-    isRevision: boolean;
+    status: string;
     revision: string;
 }

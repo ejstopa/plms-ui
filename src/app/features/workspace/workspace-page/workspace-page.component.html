@@ -4,7 +4,7 @@
         (openFileClicked)="openSelectedFiles()" (deleteFileClicked)="deleteAndCloseSelectedFiles()">
     </app-workspace-toolbar>
     <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
-        <app-workspace-files-list [files]="workspaceFiles()" [creoConnected]="creoConnected()"
+        <app-files-list [files]="workspaceFiles()" [creoConnected]="creoConnected()"
             (openFileClicked)="openFile($event)" (selectedFilesChange)="setSelectedFiles($event)" />
     </div>
 </div>

@@ -1,20 +1,22 @@
-import { Component, computed, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, OnInit, signal } from '@angular/core';
 import { CreoSessionService } from '../../../core/creo/services/creo-session.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { WorkspaceService } from '../workspace.service';
-import { WorkspaceFileModel } from '../workspace-file.model';
-import { WorkspaceFilesListComponent } from "../workspace-files-list/workspace-files-list.component";
+import { FilesListComponent } from "../../../core/file/files-list/files-list.component";
 import { LoadingComponent } from '../../../core/loading/loading.component';
 import { WorkspaceToolbarComponent } from '../workspace-toolbar/workspace-toolbar.component';
+import { FileData } from '../../../core/file/file-data';
+import { FileService } from '../../../core/file/file.service';
 
 @Component({
   selector: 'app-workspace-page',
   standalone: true,
-  imports: [WorkspaceFilesListComponent, WorkspaceToolbarComponent, LoadingComponent],
+  imports: [FilesListComponent, WorkspaceToolbarComponent, LoadingComponent],
   templateUrl: './workspace-page.component.html',
   styleUrl: './workspace-page.component.scss'
 })
-export class WorkspacePageComponent {
+export class WorkspacePageComponent implements OnInit{
+
 
   // @HostListener('document:visibilitychange', ['$event'])
   // appVisibility() {
@@ -28,30 +30,24 @@ export class WorkspacePageComponent {
   private authService = inject(AuthService);
   private creoSessionService = inject(CreoSessionService);
   private workspaceService = inject(WorkspaceService);
+  private fileService = inject(FileService);
   private fileExtensions = [".prt", ".asm", ".drw"];
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
   user = computed(() => this.authService.user());
-  workspaceFiles = computed(() => this.filterFilesByExtension(this.workspaceService.workspaceFiles().value, this.fileExtensions))
+  workspaceFiles = computed(() => this.fileService.filterFilesByExtension(this.workspaceService.workspaceFiles().value, this.fileExtensions))
   workspaceError = computed(() => this.workspaceService.workspaceFiles().error);
-  selectedFiles = signal<WorkspaceFileModel[]>([]);
+  selectedFiles = signal<FileData[]>([]);
 
-  filterFilesByExtension(files: WorkspaceFileModel[] | null, extensions: string[]) {
-    if (!files) {
-      return null;
-    }
-
-    let workspaceFiles = files?.filter(
-      file => extensions.some(extension => file.extension == extension));
-
-    return workspaceFiles;
+  ngOnInit(): void {
+    this.workspaceService.getWorkspaceFiles();
   }
 
-  setSelectedFiles(files: WorkspaceFileModel[]) {
+  setSelectedFiles(files: FileData[]) {
     this.selectedFiles.set(files);
   }
 
-  openFile(file: WorkspaceFileModel) {
+  openFile(file: FileData) {
     if (this.creoConnected()) {
       this.creoSessionService.openCreoFiles([file.fullPath]);
     }
@@ -92,7 +88,7 @@ export class WorkspacePageComponent {
   }
 
 
-  private deleteWorkspaceFiles(files: WorkspaceFileModel[]) {
+  private deleteWorkspaceFiles(files: FileData[]) {
     for (let file of files) {
       this.workspaceService.deleteWorkspaceFile(file.fullPath).subscribe(
         {
@@ -104,7 +100,7 @@ export class WorkspacePageComponent {
     }
   }
 
-  private closeCreoFiles(files: WorkspaceFileModel[]) {
+  private closeCreoFiles(files: FileData[]) {
     if (this.creoConnected()) {
       let filePaths = files.map(file => file.fullPath);
       this.creoSessionService.closeCreoFiles(filePaths);

@@ -5,6 +5,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { WorkspaceFileModel } from './workspace-file.model';
 import { map, take } from 'rxjs';
 import { HttpResult } from '../../core/interfaces/http-result';
+import { FileData } from '../../core/file/file-data';
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +14,16 @@ export class WorkspaceService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private apiUrl = computed(() =>`${environment.pxApiUrl}/users/${this.authService.user()?.id}/workspace-files`);
-  private workspaceFilesSignal = signal<HttpResult<WorkspaceFileModel[]>>({value: null, error:null});
+  private workspaceFilesSignal = signal<HttpResult<FileData[]>>({value: null, error:null});
 
   workspaceFiles = computed(() => this.workspaceFilesSignal());
 
   constructor() { 
-    this.getWorkspaceFiles();
+   
   }
 
   getWorkspaceFiles(){
-    this.http.get<WorkspaceFileModel[]>(this.apiUrl()).pipe(
+    this.http.get<FileData[]>(this.apiUrl()).pipe(
       take(1),
       map(files => files.map(file => {
         return {...file, lastModifiedAt: new Date(file.lastModifiedAt)};

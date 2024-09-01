@@ -3,13 +3,14 @@
 
     @if (isConnectedToCreo()){
     <div class="d-flex ms-auto me-3 mb-0 pb-0 align-items-end">
-        <img class="creo-logo mb-1 border border-primary" src="images/creologo.ico" alt="logo-creo">
-        <small class="ms-1 mb-0 pb-0">Conectado</small>
+        <small class="me-1 mb-0 pb-0">conectado</small>
+        <img class="creo-logo mb-1 border border-primary" src="images/creo-logo.png" alt="logo-creo">
     </div>
     }
-
+   
     <div class="dropdown" [class.ms-auto]="!isConnectedToCreo()">
-        <button class="btn btn-primary text-secondary btn-sm py-1" type="button" data-bs-toggle="dropdown">
+        <span class="mx-1 text-secondary ">|</span>
+        <button class="btn text-secondary btn-sm py-0" type="button" data-bs-toggle="dropdown">
             <i class="fa-solid fa-user"></i>
             <span class="ms-1">{{user()?.name}}</span>
             <i class="fa-solid fa-ellipsis-vertical ms-2"></i>

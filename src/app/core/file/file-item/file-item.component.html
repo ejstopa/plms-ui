@@ -1,16 +1,16 @@
 <div class="d-flex align-items-center p-1" [class.bg-secondary]="checked()">
     <input class="form-check-input me-2" type="checkbox" (change)="onCheckBoxChange()">
+    <span><img class="me-1 file-status-img" [src]="fileStatusImgPath()" alt="file status"></span>
     <div [class.file-descriptor]="creConnected()" [title]="creConnected()? 'Abrir' : ''" (click)="onOpenClicked()">
-        <span><img class="me-1 file-status-img" [src]="fileStatusImgPath()" alt="file status"></span>
         <span><img class="me-1" [src]="fileIconImgPath()" alt="file type"></span>
         <span>{{file().name}}{{file().extension}}</span>
+        <span class="ms-1">/ {{file().revision}}</span>
     </div>
-    <div class="d-flex ms-auto last-modified">
+    <div class="d-flex ms-auto border-start border-2 px-1 last-modified">
         <span>
             {{file().lastModifiedAt.toLocaleDateString()}} 
             {{file().lastModifiedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}}
         </span>
     </div>
-
 </div>
 <hr class="mx-1 my-1">

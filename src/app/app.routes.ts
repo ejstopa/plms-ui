@@ -13,11 +13,8 @@ export const routes: Routes = [
     {path: "", component:MainPageComponent, canActivate: [() => AuthGuard()], children:[
         {path: "", redirectTo:"workspace", pathMatch: "full"},
         {path: "workspace", component:WorkspacePageComponent},
-        {path: "library", loadComponent: () => LibraryPageComponent, children: [
-            {path: "", redirectTo:"diretorios", pathMatch: "full"},
-            {path: "diretorios", component: LibraryDirectoriesListComponent},
-            {path: "diretorios/:directoryName", component: LibraryDirectoryPageComponent}
-        ]},
+        {path: "library", loadComponent: () => LibraryPageComponent},
+        {path: "library/:directoryName", component: LibraryDirectoryPageComponent},
         {path: "pesquisa", loadComponent: () => SearchPageComponent},
         {path: "workflows", loadComponent: () => WorkflowsPageComponent}
     ] },

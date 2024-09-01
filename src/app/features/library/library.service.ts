@@ -11,7 +11,7 @@ import { HttpResult } from '../../core/interfaces/http-result';
 export class LibraryService {
   private http = inject(HttpClient);
 
-  private apiUrl = computed(() => `${environment.pxApiUrl}/library`);
+  private apiUrl = `${environment.pxApiUrl}/library`;
   private directoriesSignal = signal<HttpResult<LibraryDirectoryModel[]>>({ value: null, error: null });
   private activeDirectoryNameSignal = signal<string | null>(null);
 
@@ -24,7 +24,7 @@ export class LibraryService {
   }
 
   getLibraryDirectories() {
-    this.http.get<LibraryDirectoryModel[]>(`${this.apiUrl()}/directories`).pipe(
+    this.http.get<LibraryDirectoryModel[]>(`${this.apiUrl}/directories`).pipe(
       take(1)
     ).subscribe(
       {
@@ -37,4 +37,7 @@ export class LibraryService {
   setActiveDirectory(directoryName: string | null){
     this.activeDirectoryNameSignal.set(directoryName);
   }
+
+  
+
 }

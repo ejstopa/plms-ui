@@ -1,20 +1,20 @@
 import { Component, computed, input, output, signal } from '@angular/core';
-import { WorkspaceFileModel } from '../workspace-file.model';
+import { FileData } from '../file-data';
 
 @Component({
-  selector: 'app-workspace-file-item',
+  selector: 'app-file-item',
   standalone: true,
   imports: [],
-  templateUrl: './workspace-file-item.component.html',
-  styleUrl: './workspace-file-item.component.scss'
+  templateUrl: './file-item.component.html',
+  styleUrl: './file-item.component.scss'
 })
-export class WorkspaceFileItemComponent {
-  file = input.required<WorkspaceFileModel>();
+export class FileItemComponent {
+  file = input.required<FileData>();
   creConnected = input.required<boolean>();
 
-  selected = output<WorkspaceFileModel>();
-  unselected = output<WorkspaceFileModel>();
-  openClicked = output<WorkspaceFileModel>();
+  selected = output<FileData>();
+  unselected = output<FileData>();
+  openClicked = output<FileData>();
 
   fileIconImgPath = computed(() => this.getFileIconImgPath(this.file()));
   fileStatusImgPath = computed(() => this.getFileStatusImgPath(this.file()));
@@ -47,7 +47,7 @@ export class WorkspaceFileItemComponent {
   }
 
 
-  private getFileIconImgPath(file: WorkspaceFileModel) {
+  private getFileIconImgPath(file: FileData) {
     let fileImgPath = "";
 
     switch (file.extension) {
@@ -64,7 +64,20 @@ export class WorkspaceFileItemComponent {
     return fileImgPath;
   }
 
-  private getFileStatusImgPath(file: WorkspaceFileModel): string{
-    return file.isRevision? "images/checkout_revise.png" : "images/new.png"
+  private getFileStatusImgPath(file: FileData): string{
+    let statusImgPath = "";
+
+    switch (file.status) {
+      case "newItem":
+        statusImgPath = "images/new.png";
+        break;
+      case "checkedOut":
+        statusImgPath = "images/checkout_revise.png";
+        break;
+      case "released":
+        statusImgPath = "images/completed.png";
+        break;
+    }
+    return statusImgPath;
   }
 }

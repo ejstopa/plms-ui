@@ -1,1 +1,18 @@
-<h5>{{directory()?.name}}</h5>
+
+
+<div class="d-flex flex-column h-100 p-2 overflow-auto main-pages-height">
+    <div class="d-flex align-items-end">
+        <h4 class="pages-link" routerLink="/library">Library</h4>
+        <h4 class="mx-1">/</h4>
+        <h5>{{directory()?.name}}</h5>
+    </div>
+    <app-library-toolbar [creoConnected]="creoConnected()" (openFileClicked)="openSelectedFiles()" (newRevisionClicked)="CheckoutSelectedModels()"></app-library-toolbar>
+    <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
+        <app-files-list [files]="files()" [creoConnected]="creoConnected()"
+            (openFileClicked)="openFile($event)" (selectedFilesChange)="setSelectedFiles($event)" />
+    </div>
+</div>
+
+<app-loading></app-loading>
+
+
