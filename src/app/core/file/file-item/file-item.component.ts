@@ -1,5 +1,6 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { FileData } from '../file-data';
+import { FileStatus } from '../file-status';
 
 @Component({
   selector: 'app-file-item',
@@ -19,7 +20,6 @@ export class FileItemComponent {
   fileIconImgPath = computed(() => this.getFileIconImgPath(this.file()));
   fileStatusImgPath = computed(() => this.getFileStatusImgPath(this.file()));
   checked = signal<boolean>(false);
-
 
   onCheckBoxChange(){
     this.checked.update((checked) => !checked);
@@ -68,13 +68,13 @@ export class FileItemComponent {
     let statusImgPath = "";
 
     switch (file.status) {
-      case "newItem":
+      case FileStatus[FileStatus.newItem]:
         statusImgPath = "images/new.png";
         break;
-      case "checkedOut":
+      case FileStatus[FileStatus.checkedOut]:
         statusImgPath = "images/checkout_revise.png";
         break;
-      case "released":
+      case FileStatus[FileStatus.released]:
         statusImgPath = "images/completed.png";
         break;
     }

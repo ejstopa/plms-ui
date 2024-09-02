@@ -9,7 +9,6 @@ export interface Model {
       filePath: string;
       itemId: number;
       createdBy: number;
-      checkedOutBy?: number;
       createdAt: Date;
-      checkedOutAt?: Date;
+      checkedOutBy?: number;
 }

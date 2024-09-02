@@ -5,4 +5,5 @@ export interface FileData {
     lastModifiedAt: Date;
     status: string;
     revision: string;
+    itemId: number;
 }

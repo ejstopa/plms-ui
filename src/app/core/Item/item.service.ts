@@ -31,7 +31,7 @@ export class ItemService {
         take(1),
         tap({
           next: result => result.forEach(model => revisedModels.push(`${model.name}${model.type}`)),
-          error: error => alert(`Ocorreu um erro ao criar um revisão para o item ${item.selectedModelName}`)
+          error: error => alert(`Ocorreu um erro ao criar uma revisão para o item ${item.selectedModelName}`)
         })
       )
       reviseActions$.push(modelRevision$);
@@ -42,11 +42,36 @@ export class ItemService {
         this.loadingService.setLoadingEnd();
 
         if (revisedModels.length == 1) {
-          alert(`O arquivo ${[...revisedModels]} foi enviado para a workspace`);
+          alert(`Revisão reservada com sucesso \n O arquivo ${[...revisedModels]} foi enviado para a workspace`);
         }
         else if (revisedModels.length > 1) {
-          alert(`Os arquivos ${[...revisedModels]} foram enviados para a workspace`);
+          alert(`Revisão reservada com sucesso \n Os arquivos ${[...revisedModels]} foram enviados para a workspace`);
         }
+      })
+    )
+  }
+
+  uncheckoutItems(itemsRevisionData: ItemRevisionData[]) {
+    this.loadingService.setLoadingStart();
+
+    let uncheckedOutModels: string[] = [];
+    let uncheckoutActions$: Observable<object>[] = []
+
+    for (let item of itemsRevisionData) {
+
+      const modelRevision$ = this.http.delete<Model[]>(`${environment.pxApiUrl}/items/reservations/?itemId=${item.itemId}&userId=${this.authService.user()!.id} `).pipe(
+        take(1),
+        tap({
+          next: result => result.forEach(model => uncheckedOutModels.push(`${model.name}${model.type}`)),
+          error: error => alert(`Ocorreu um erro ao excluir a revisão do item ${item.selectedModelName}`)
+        })
+      )
+      uncheckoutActions$.push(modelRevision$);
+    }
+
+    return forkJoin([... uncheckoutActions$]).pipe(
+      finalize(() => {
+        this.loadingService.setLoadingEnd();
       })
     )
   }

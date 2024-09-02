@@ -7,6 +7,9 @@ import { LoadingComponent } from '../../../core/loading/loading.component';
 import { WorkspaceToolbarComponent } from '../workspace-toolbar/workspace-toolbar.component';
 import { FileData } from '../../../core/file/file-data';
 import { FileService } from '../../../core/file/file.service';
+import { FileStatus } from '../../../core/file/file-status';
+import { ItemService } from '../../../core/Item/item.service';
+import { ItemRevisionData } from '../../../core/Item/item-revision-data';
 
 @Component({
   selector: 'app-workspace-page',
@@ -15,8 +18,7 @@ import { FileService } from '../../../core/file/file.service';
   templateUrl: './workspace-page.component.html',
   styleUrl: './workspace-page.component.scss'
 })
-export class WorkspacePageComponent implements OnInit{
-
+export class WorkspacePageComponent implements OnInit {
 
   // @HostListener('document:visibilitychange', ['$event'])
   // appVisibility() {
@@ -31,6 +33,7 @@ export class WorkspacePageComponent implements OnInit{
   private creoSessionService = inject(CreoSessionService);
   private workspaceService = inject(WorkspaceService);
   private fileService = inject(FileService);
+  private itemService = inject(ItemService);
   private fileExtensions = [".prt", ".asm", ".drw"];
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
@@ -81,7 +84,21 @@ export class WorkspacePageComponent implements OnInit{
       return;
     }
 
-    this.deleteWorkspaceFiles(this.selectedFiles());
+    let filesToDelete = this.selectedFiles().filter(file => file.status == FileStatus[FileStatus.newItem]);
+    this.deleteWorkspaceFiles(filesToDelete);
+
+    let filesToDeleteRevision = this.selectedFiles().filter(file => file.status == FileStatus[FileStatus.checkedOut]);
+    let filesToDeleteRevisionDistinct: FileData[] = filesToDeleteRevision.filter((file, i, array) =>
+      array.findIndex(t => t.itemId == file.itemId) == i);
+    let itemsRevisionData: ItemRevisionData[] = filesToDeleteRevisionDistinct.map(file => { return { itemId: file.itemId, userId: this.authService.user()!.id, selectedModelName: file.name } });
+
+    this.itemService.uncheckoutItems(itemsRevisionData).subscribe(
+      {
+        complete: () => this.workspaceService.getWorkspaceFiles()
+      }
+    );
+
+
     this.closeCreoFiles(this.selectedFiles());
 
     this.workspaceService.getWorkspaceFiles();

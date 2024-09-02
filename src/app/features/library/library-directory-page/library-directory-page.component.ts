@@ -102,7 +102,7 @@ export class LibraryDirectoryPageComponent implements AfterViewInit {
       this.selectedFiles().some(file => file.name == model.name)) || [];
     
     let selectedModelsDistinct: Model[] = selectedModels.filter((model, i, array) => 
-      array.findIndex(t => t.name == model.name) == i);
+      array.findIndex(t => t.itemId == model.itemId) == i);
     
     let itemsRevisionData: ItemRevisionData[] = selectedModelsDistinct.map(model=> 
       {return {itemId: model.itemId, userId: this.authService.user()!.id, selectedModelName: model.name }});
