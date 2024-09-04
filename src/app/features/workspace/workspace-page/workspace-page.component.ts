@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, OnInit, signal } from '@angular/core';
 import { CreoSessionService } from '../../../core/creo/services/creo-session.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { WorkspaceService } from '../workspace.service';
@@ -10,11 +10,14 @@ import { FileService } from '../../../core/file/file.service';
 import { FileStatus } from '../../../core/file/file-status';
 import { ItemService } from '../../../core/Item/item.service';
 import { ItemRevisionData } from '../../../core/Item/item-revision-data';
+import { ItemListComponent } from '../../../core/Item/item-list/item-list.component';
+import { Item } from '../../../core/Item/item';
+import { Model } from '../../../core/model/model';
 
 @Component({
   selector: 'app-workspace-page',
   standalone: true,
-  imports: [FilesListComponent, WorkspaceToolbarComponent, LoadingComponent],
+  imports: [ItemListComponent, WorkspaceToolbarComponent, LoadingComponent],
   templateUrl: './workspace-page.component.html',
   styleUrl: './workspace-page.component.scss'
 })
@@ -32,41 +35,34 @@ export class WorkspacePageComponent implements OnInit {
   private authService = inject(AuthService);
   private creoSessionService = inject(CreoSessionService);
   private workspaceService = inject(WorkspaceService);
-  private fileService = inject(FileService);
   private itemService = inject(ItemService);
-  private fileExtensions = [".prt", ".asm", ".drw"];
+
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
   user = computed(() => this.authService.user());
-  workspaceFiles = computed(() => this.fileService.filterFilesByExtension(this.workspaceService.workspaceFiles().value, this.fileExtensions))
+  workspaceItems = computed(() => this.workspaceService.workspaceFiles().value,)
   workspaceError = computed(() => this.workspaceService.workspaceFiles().error);
-  selectedFiles = signal<FileData[]>([]);
+  selectedItems = signal<Item[]>([]);
 
   ngOnInit(): void {
     this.workspaceService.getWorkspaceFiles();
   }
 
-  setSelectedFiles(files: FileData[]) {
-    this.selectedFiles.set(files);
+  setSelectedItems(items: Item[]) {
+    this.selectedItems.set(items);
   }
 
-  openFile(file: FileData) {
-    if (this.creoConnected()) {
-      this.creoSessionService.openCreoFiles([file.fullPath]);
-    }
-  }
-
-  openSelectedFiles() {
+  openSelectedItems() {
     if (!this.creoConnected()) {
       return;
     }
 
-    if (this.selectedFiles().length == 0) {
-      alert("Nenhum arquivo selecionado");
+    if (this.selectedItems().length == 0) {
+      alert("Nenhum item selecionado");
       return;
     }
 
-    let filePaths = this.selectedFiles().map(file => file.fullPath);
+    let filePaths = this.selectedItems().flatMap(item => item.models.map(model => model.filePath));;
     this.creoSessionService.openCreoFiles(filePaths);
   }
 
@@ -74,23 +70,24 @@ export class WorkspacePageComponent implements OnInit {
     this.creoSessionService.startCreoNewFileWindow();
   }
 
-  deleteAndCloseSelectedFiles() {
-    if (this.selectedFiles().length == 0) {
-      alert("Nenhum arquivo selecionado");
+  deleteAndCloseSelectedModels() {
+    if (this.selectedItems().length == 0) {
+      alert("Nenhum item selecionado");
       return;
     }
 
-    if (!confirm("Deseja realmente excluir o arquivos selecionados?")) {
+    if (!confirm("Deseja realmente excluir os items selecionados?")) {
       return;
     }
 
-    let filesToDelete = this.selectedFiles().filter(file => file.status == FileStatus[FileStatus.newItem]);
-    this.deleteWorkspaceFiles(filesToDelete);
+    let ModelsToDelete: Model[] = [];
 
-    let filesToDeleteRevision = this.selectedFiles().filter(file => file.status == FileStatus[FileStatus.checkedOut]);
-    let filesToDeleteRevisionDistinct: FileData[] = filesToDeleteRevision.filter((file, i, array) =>
-      array.findIndex(t => t.itemId == file.itemId) == i);
-    let itemsRevisionData: ItemRevisionData[] = filesToDeleteRevisionDistinct.map(file => { return { itemId: file.itemId, userId: this.authService.user()!.id, selectedModelName: file.name } });
+    this.selectedItems().forEach(item => item.models.forEach(model => ModelsToDelete.push(model)));
+
+    this.deleteWorkspaceFiles(ModelsToDelete);
+
+    let itemsToDeleteRevision = this.selectedItems().filter(file => file.status == FileStatus[FileStatus.checkedOut]);
+    let itemsRevisionData: ItemRevisionData[] = itemsToDeleteRevision.map(item => { return { itemId: item.id, itemName: item.name, userId: this.authService.user()!.id} });
 
     this.itemService.uncheckoutItems(itemsRevisionData).subscribe(
       {
@@ -99,27 +96,27 @@ export class WorkspacePageComponent implements OnInit {
     );
 
 
-    this.closeCreoFiles(this.selectedFiles());
+    this.closeCreoModels(ModelsToDelete);
 
     this.workspaceService.getWorkspaceFiles();
   }
 
 
-  private deleteWorkspaceFiles(files: FileData[]) {
-    for (let file of files) {
-      this.workspaceService.deleteWorkspaceFile(file.fullPath).subscribe(
+  private deleteWorkspaceFiles(models: Model[]) {
+    for (let model of models) {
+      this.workspaceService.deleteWorkspaceFile(model.filePath).subscribe(
         {
           error: error => {
-            alert(`Ocorreu um erro ao tentar excluir o arquivo: ${file.fullPath}`);
+            alert(`Ocorreu um erro ao tentar excluir o arquivo: ${model.filePath}`);
           }
         }
       );
     }
   }
 
-  private closeCreoFiles(files: FileData[]) {
+  private closeCreoModels(models: Model[]) {
     if (this.creoConnected()) {
-      let filePaths = files.map(file => file.fullPath);
+      let filePaths = models.map(model=> model.filePath);
       this.creoSessionService.closeCreoFiles(filePaths);
     }
   }

@@ -1,0 +1,27 @@
+<div [class.item-selected]="selected()">
+    <div class="item d-flex align-items-center" title="Expandir Item">
+        <div class="text-primary ms-1 me-2" (click)="toggleExpanded()">
+            <i class="fa-solid fa-angle-down fa-sm" [class.fa-rotate-270]="expanded()"></i>
+        </div>
+        <div>
+            <input class="form-check-input me-2" type="checkbox" #selectCheckbox (click)="onSelectChange()">
+        </div>
+        <div class="d-flex algin-items-center w-100" (click)="toggleExpanded()">
+            <span><img class="me-2 file-status-img" [src]="itemStatusImgPath()" alt=""></span>
+            <span><img class="me-2" src="images/group.png" alt=""></span>
+            <div>
+                {{item().name}}/{{item().lastRevision}}
+            </div>
+        </div>
+    </div>
+
+    @if(expanded()){
+    <div>
+        @for (model of item().models; track $index){
+        <app-model-descriptor [model]="model" class="model-descriptor"
+            [attr.title]="creoConnected()? 'Abrir Modelo' : ''" />
+        }
+    </div>
+    }
+</div>
+<hr class="my-1">

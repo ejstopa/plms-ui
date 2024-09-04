@@ -1,13 +1,13 @@
 <div class="card d-flex flex-row align-items-center my-2 p-1 bg-success">
     @if (creoConnected()){
         <button class="btn btn-success text-white px-2 py-0">
-            <i class="fa-solid fa-file-circle-plus" title="Criar novo arquivo" (click)="onNewFileClicked()"></i>
+            <i class="fa-solid fa-file-circle-plus" title="Criar novo modelo" (click)="onNewFileClicked()"></i>
         </button>
         <button class="btn btn-success text-white px-2 py-0">
-            <i class="fa-regular fa-folder-open" title="Abrir arquivos selecionados" (click)="onOpenFileClicked()"></i>
+            <i class="fa-regular fa-folder-open" title="Abrir modelos selecionados" (click)="onOpenFileClicked()"></i>
         </button>
     }
     <button class="btn btn-success text-white px-2 py-0">
-        <i class="fa-solid fa-trash-can" title="Excluir arquivos selecionados" (click)="onDeleteFileClicked()"></i>
+        <i class="fa-solid fa-trash-can" title="Excluir items selecionados" (click)="onDeleteFileClicked()"></i>
     </button>
 </div>

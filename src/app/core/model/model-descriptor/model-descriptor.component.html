@@ -1,0 +1,9 @@
+<div class="me-1">
+    <i class="fa-solid fa-reply fa-rotate-180 text-primary"></i>
+</div>
+<div class="me-2">
+    <img [src]="modelTypeImgPath()" alt="-">
+</div>
+<div [class.model-name]="creoConnected()" (click)="openModel()">
+    {{model().name}}{{model().type}}
+</div>

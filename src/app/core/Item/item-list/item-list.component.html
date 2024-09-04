@@ -1,0 +1,17 @@
+<div class="d-flex align-items-center border bg-secondary mb-1">
+    <div class="checkbox">
+        <input class="form-check-input me-2" type="checkbox" title="Selecionar todos" (click)="onSelectClicked($event)">
+    </div>
+    <div class="ms-auto text-primary border-start">
+        <button class="btn btn-secondary btn-sm" (click)="expandAllItems()">
+            <i class="expand-all fa-solid fa-solid fa-angles-down fa-sm text-primary p-0" title="Expandir todos"></i>
+        </button>
+        <button class="btn btn-secondary btn-sm" (click)="collapseAllItems()">
+            <i class="expand-all fa-solid fa-solid fa-angles-up fa-sm text-primary p-0" title="Compactar todos"></i>
+        </button>
+    </div>
+</div>
+@for(item of items(); track $index){
+<app-item-descriptor [item]="item" [selected]="selectedItems().includes(item)" (selectClicked)="addSelectedItem($event)"
+    (unselectClicked)="removeSelectedItem($event)" />
+}

@@ -10,5 +10,8 @@ export interface Model {
       itemId: number;
       createdBy: number;
       createdAt: Date;
+      lastModifiedBy: number;
+      lastModifiedAt: Date;
       checkedOutBy?: number;
+
 }

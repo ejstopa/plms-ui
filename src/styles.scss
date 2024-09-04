@@ -46,3 +46,7 @@ html{
     width: fit-content;
     min-width: fit-content;
 }
+
+.btn-secondary:hover{
+    background-color: $color-secondary-dark;
+}

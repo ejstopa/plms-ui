@@ -1,11 +1,10 @@
 <div class="d-flex flex-column h-100 p-2 overflow-auto main-pages-height">
     <h4>Workspace</h4>
     <app-workspace-toolbar [creoConnected]="creoConnected()" (newFileClicked)="startNewFileWindow()"
-        (openFileClicked)="openSelectedFiles()" (deleteFileClicked)="deleteAndCloseSelectedFiles()">
+        (openFileClicked)="openSelectedItems()" (deleteFileClicked)="deleteAndCloseSelectedModels()">
     </app-workspace-toolbar>
     <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
-        <app-files-list [files]="workspaceFiles()" [creoConnected]="creoConnected()"
-            (openFileClicked)="openFile($event)" (selectedFilesChange)="setSelectedFiles($event)" />
+        <app-item-list [items]="workspaceItems()" [creoConnected]="creoConnected()" (selectedItemsChanged)="setSelectedItems($event)"/>
     </div>
 </div>
 

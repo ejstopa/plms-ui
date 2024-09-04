@@ -14,38 +14,28 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { ItemService } from '../../../core/Item/item.service';
 import { ItemRevisionData } from '../../../core/Item/item-revision-data';
+import { ItemListComponent } from '../../../core/Item/item-list/item-list.component';
+import { Item } from '../../../core/Item/item';
 
 @Component({
   selector: 'app-library-directory-page',
   standalone: true,
-  imports: [RouterLink, LoadingComponent, FilesListComponent, LibraryToolbarComponent, LoadingComponent],
+  imports: [RouterLink, LoadingComponent, FilesListComponent, LibraryToolbarComponent, ItemListComponent, LoadingComponent],
   templateUrl: './library-directory-page.component.html',
   styleUrl: './library-directory-page.component.scss'
 })
 export class LibraryDirectoryPageComponent implements AfterViewInit {
   private authService = inject(AuthService);
   private libraryService = inject(LibraryService);
-  private modelService = inject(ModelService);
   private itemService = inject(ItemService);
   private creoSessionService = inject(CreoSessionService);
 
-  private modelsResult = signal<HttpResult<Model[]>>({ value: null, error: null });
-  private fileExtensions = [".prt", ".asm", ".drw"];
+  private itemsResult = signal<HttpResult<Item[]>>({ value: null, error: null });
 
   directory = computed(() => this.libraryService.activeDirectory());
-  models = computed(() => this.modelsResult().value);
-  modelsError = computed(() => this.modelsResult().error);
-  selectedFiles = signal<FileData[]>([]);
-
-  files = computed(() => this.models() ?
-    this.models()!.map(model => ({
-      name: model.name,
-      extension: model.type,
-      fullPath: model.filePath,
-      lastModifiedAt: model.createdAt,
-      status: model.checkedOutBy ? 'checkedOut' : 'released',
-      revision: model.revision
-    }) as FileData) : null);
+  items = computed(() => this.itemsResult().value);
+  itemsError = computed(() => this.itemsResult().error);
+  selectedItems = signal<Item[]>([]);
 
   @Input()
   directoryName: string = "";
@@ -55,60 +45,47 @@ export class LibraryDirectoryPageComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.libraryService.setActiveDirectory(this.directoryName);
-    this.getModels();
+    this.getItems();
   }
 
-  getModels() {
-    this.modelService.getModelsByFamily(this.directoryName).subscribe(
+  getItems() {
+    this.itemService.getItemsByFamily(this.directoryName).subscribe(
       {
-        next: models => {
-          this.modelsResult.set(models);
+        next: itemResult => {
+          this.itemsResult.set(itemResult);
         }
       }
     );
   }
 
-  setSelectedFiles(files: FileData[]) {
-    this.selectedFiles.set(files);
+  setSelectedItems(items: Item[]) {
+    this.selectedItems.set(items)
   }
 
-  openFile(file: FileData) {
-    if (this.creoConnected()) {
-      this.creoSessionService.openCreoFiles([file.fullPath]);
-    }
-  }
-
-  openSelectedFiles() {
+  openSelectedItems() {
     if (!this.creoConnected()) {
       return;
     }
 
-    if (this.selectedFiles().length == 0) {
-      alert("Nenhum arquivo selecionado");
+    if (this.selectedItems().length == 0) {
+      alert("Nenhum item selecionado");
       return;
     }
 
-    let filePaths = this.selectedFiles().map(file => file.fullPath);
+    let filePaths = this.selectedItems().flatMap(item => item.models.map(model => model.filePath));
     this.creoSessionService.openCreoFiles(filePaths);
   }
 
   CheckoutSelectedModels() {
-    if (this.selectedFiles().length == 0) {
-      alert("Nenhum arquivo selecionado");
+    if (this.selectedItems().length == 0) {
+      alert("Nenhum item selecionado");
       return;
     }
 
-    let selectedModels: Model[] = this.models()?.filter(model => 
-      this.selectedFiles().some(file => file.name == model.name)) || [];
-    
-    let selectedModelsDistinct: Model[] = selectedModels.filter((model, i, array) => 
-      array.findIndex(t => t.itemId == model.itemId) == i);
-    
-    let itemsRevisionData: ItemRevisionData[] = selectedModelsDistinct.map(model=> 
-      {return {itemId: model.itemId, userId: this.authService.user()!.id, selectedModelName: model.name }});
+    let itemsRevisionData: ItemRevisionData[] = this.selectedItems().map(item => { return { itemId: item.id, itemName: item.name, userId: this.authService.user()!.id } });
 
     this.itemService.CheckoutItems(itemsRevisionData)?.subscribe({
-      complete: () => this.getModels()
+      complete: () => this.getItems()
     });
   }
 

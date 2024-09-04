@@ -4,8 +4,8 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
 import { finalize, map, take } from 'rxjs';
 import { HttpResult } from '../../core/interfaces/http-result';
-import { FileData } from '../../core/file/file-data';
 import { LoadingService } from '../../core/loading/loading.service';
+import { Item } from '../../core/Item/item';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class WorkspaceService {
   private http = inject(HttpClient);
   private loadingService = inject(LoadingService);
   private authService = inject(AuthService);
-  private apiUrl = computed(() =>`${environment.pxApiUrl}/users/${this.authService.user()?.id}/workspace-files`);
-  private workspaceFilesSignal = signal<HttpResult<FileData[]>>({value: null, error:null});
+  private apiUrl = computed(() =>`${environment.pxApiUrl}/users/${this.authService.user()?.id}/workspace/items`);
+  private workspaceFilesSignal = signal<HttpResult<Item[]>>({value: null, error:null});
 
   workspaceFiles = computed(() => this.workspaceFilesSignal());
 
@@ -26,7 +26,7 @@ export class WorkspaceService {
   getWorkspaceFiles(){
     this.loadingService.setLoadingStart();
 
-    this.http.get<FileData[]>(this.apiUrl()).pipe(
+    this.http.get<Item[]>(this.apiUrl()).pipe(
       take(1),
       map(files => files.map(file => {
         return {...file, lastModifiedAt: new Date(file.lastModifiedAt)};
@@ -39,8 +39,9 @@ export class WorkspaceService {
   }
 
   deleteWorkspaceFile(filePath: string){
+    let apiUrl = computed(() =>`${environment.pxApiUrl}/users/${this.authService.user()?.id}/workspace-files`);
     let filePathReplaced = filePath.replaceAll("/", "\\");
-    let url = `${this.apiUrl()}/${encodeURIComponent(filePathReplaced)}`;
+    let url = `${apiUrl()}/${encodeURIComponent(filePathReplaced)}`;
 
     return this.http.delete(url).pipe(
       take(1));

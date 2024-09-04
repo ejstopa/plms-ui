@@ -4,6 +4,7 @@ $color-primary-dark: darken($color: $color-primary, $amount: 5%);
 $color-primary-light: lighten($color: $color-primary, $amount: 5%);
 
 $color-secondary: rgb(240, 240, 240);
+$color-secondary-dark: darken($color: $color-secondary, $amount: 5%);
 $color-secondary-light: lighten($color: $color-secondary, $amount: 5%);;
 
 $color-success: rgb(146, 208, 80);
