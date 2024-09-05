@@ -1,7 +1,7 @@
 <div [class.item-selected]="selected()">
     <div class="item d-flex align-items-center" title="Expandir Item">
-        <div class="text-primary ms-1 me-2" (click)="toggleExpanded()">
-            <i class="fa-solid fa-angle-down fa-sm" [class.fa-rotate-270]="expanded()"></i>
+        <div class="ms-1 me-2" (click)="toggleExpanded()">
+            <i class="fa-solid fa-angle-down fa-sm text-primary" [class.fa-rotate-270]="!expanded()"></i>
         </div>
         <div>
             <input class="form-check-input me-2" type="checkbox" #selectCheckbox (click)="onSelectChange()">
