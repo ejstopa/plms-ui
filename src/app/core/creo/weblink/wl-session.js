@@ -23,7 +23,7 @@ export function setWorkingDirectory(creoSession, directory){
 }
 
 export function setConfigOption(creoSession, name, value){
-    creoSession.SetConfigOption(name, value);
+    creoSession.SetConfigOption(name, value); 
 }
 
 export function listDirectoryFiles(creoSession, filter, path){
