@@ -3,6 +3,6 @@ export interface UserModel {
     name: string;
     password: string;
     windowsUser: string;
-    role: string;
+    roleId: number;
     isActive: boolean;
 }
