@@ -4,6 +4,7 @@ import { ModelDescriptorComponent } from '../../model/model-descriptor/model-des
 import { Model } from '../../model/model';
 import { ItemStatus } from '../item-status';
 import { CreoSessionService } from '../../creo/services/creo-session.service';
+import { WorkflowInstanceService } from '../../../features/workflows/workflow-instance.service';
 
 @Component({
   selector: 'app-item-descriptor',
@@ -14,10 +15,13 @@ import { CreoSessionService } from '../../creo/services/creo-session.service';
 })
 export class ItemDescriptorComponent {
   creoSessionService = inject(CreoSessionService);
+  workflowInstanceService = inject(WorkflowInstanceService);
   item = input.required<Item>();
+  allowItemReleases = input(false);
 
   selectClicked = output<Item>();
   unselectClicked = output<Item>();
+  releaseItemClicked = output<Item>();
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
   itemStatusImgPath = computed(() => this.getItemStatusImgPath(this.item()));
@@ -51,6 +55,20 @@ export class ItemDescriptorComponent {
     else{
       this.onUnselect();
     }
+  }
+
+  onReleaseItemClicked(){
+
+    if (!confirm("Deseja realmente liberar o item?")){
+      return;
+    }
+
+    this.workflowInstanceService.createWorkflowInstance(this.item().name).subscribe(
+      {
+        next: result => alert("Item enviado para o fluxo de liberação com sucesso"),
+        error: error => alert(error.error.detail)
+      }
+    )
   }
 
   private onSelect() {

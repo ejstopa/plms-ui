@@ -12,7 +12,8 @@ import { ItemDescriptorComponent } from '../item-descriptor/item-descriptor.comp
 export class ItemListComponent {
   creoConnected = input.required<boolean>();
   items = input.required<Item[] | null>();
-
+  allowItemReleases = input(false);
+  
   selectedItemsChanged = output<Item[]>();
 
   selectedItems = signal<Item[]>([]);

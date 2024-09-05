@@ -13,11 +13,16 @@
                 {{item().name}}/{{item().lastRevision}}
             </div>
             @if (item().description){
-                <div class="ms-2">
-                    ({{item().description}})
-                </div>
+            <div class="ms-2">
+                ({{item().description}})
+            </div>
             }
         </div>
+        @if(allowItemReleases()){
+        <div class="ms-auto me-1" (click)="onReleaseItemClicked()">
+            <i class="fa-solid fa-file-export text-success" title="Liberar item"></i>
+        </div>
+        }
     </div>
 
     @if(expanded()){

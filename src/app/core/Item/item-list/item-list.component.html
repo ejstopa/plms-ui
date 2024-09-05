@@ -12,6 +12,6 @@
     </div>
 </div>
 @for(item of items(); track $index){
-<app-item-descriptor [item]="item" [selected]="selectedItems().includes(item)" (selectClicked)="addSelectedItem($event)"
+<app-item-descriptor [item]="item" [selected]="selectedItems().includes(item)" [allowItemReleases]="allowItemReleases()" (selectClicked)="addSelectedItem($event)"
     (unselectClicked)="removeSelectedItem($event)" />
 }
