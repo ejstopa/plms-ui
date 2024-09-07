@@ -1,21 +1,16 @@
 import { AfterViewInit, Component, computed, inject, input, Input, OnChanges, OnInit, Signal, signal, SimpleChanges } from '@angular/core';
-import { LibraryService } from '../library.service';
-import { ModelService } from '../../../core/model/model.service';
-import { Model } from '../../../core/model/model';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpResult } from '../../../core/interfaces/http-result';
 import { LoadingComponent } from "../../../core/loading/loading.component";
 import { RouterLink } from '@angular/router';
-import { FileData } from '../../../core/file/file-data';
 import { FilesListComponent } from "../../../core/file/files-list/files-list.component";
 import { CreoSessionService } from '../../../core/creo/services/creo-session.service';
 import { LibraryToolbarComponent } from "../library-toolbar/library-toolbar.component";
 import { AuthService } from '../../../core/auth/auth.service';
-import { LoadingService } from '../../../core/loading/loading.service';
 import { ItemService } from '../../../core/Item/item.service';
 import { ItemRevisionData } from '../../../core/Item/item-revision-data';
 import { ItemListComponent } from '../../../core/Item/item-list/item-list.component';
 import { Item } from '../../../core/Item/item';
+import { ItemFamilyService } from '../../../core/item-families/item-family.service';
 
 @Component({
   selector: 'app-library-directory-page',
@@ -26,30 +21,30 @@ import { Item } from '../../../core/Item/item';
 })
 export class LibraryDirectoryPageComponent implements AfterViewInit {
   private authService = inject(AuthService);
-  private libraryService = inject(LibraryService);
+  private itemFamilyService = inject(ItemFamilyService);
   private itemService = inject(ItemService);
   private creoSessionService = inject(CreoSessionService);
 
   private itemsResult = signal<HttpResult<Item[]>>({ value: null, error: null });
 
-  directory = computed(() => this.libraryService.activeDirectory());
+  itemFamily = computed(() => this.itemFamilyService.activeItemFamily());
   items = computed(() => this.itemsResult().value);
   itemsError = computed(() => this.itemsResult().error);
   selectedItems = signal<Item[]>([]);
 
   @Input()
-  directoryName: string = "";
+  itemFamilyName: string = "";
   creoConnected = computed(() => this.creoSessionService.isConnected());
 
   constructor() { }
 
   ngAfterViewInit(): void {
-    this.libraryService.setActiveDirectory(this.directoryName);
+    this.itemFamilyService.setActiveItemFamily(this.itemFamilyName);
     this.getItems();
   }
 
   getItems() {
-    this.itemService.getItemsByFamily(this.directoryName).subscribe(
+    this.itemService.getItemsByFamily(this.itemFamilyName).subscribe(
       {
         next: itemResult => {
           this.itemsResult.set(itemResult);

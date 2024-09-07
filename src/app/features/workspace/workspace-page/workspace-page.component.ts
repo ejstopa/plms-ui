@@ -13,11 +13,15 @@ import { ItemRevisionData } from '../../../core/Item/item-revision-data';
 import { ItemListComponent } from '../../../core/Item/item-list/item-list.component';
 import { Item } from '../../../core/Item/item';
 import { Model } from '../../../core/model/model';
+import { NewItemNameComponent } from '../../../core/Item/new-item-name/new-item-name.component';
+import { ItemNameService } from '../../../core/Item/item-name.service';
+import { CreateItemNameDto } from '../../../core/Item/create_item_name_dto';
+import { ItemNameReservation } from '../../../core/Item/item-name-reservation';
 
 @Component({
   selector: 'app-workspace-page',
   standalone: true,
-  imports: [ItemListComponent, WorkspaceToolbarComponent, LoadingComponent],
+  imports: [ItemListComponent, WorkspaceToolbarComponent, LoadingComponent, NewItemNameComponent],
   templateUrl: './workspace-page.component.html',
   styleUrl: './workspace-page.component.scss'
 })
@@ -36,6 +40,7 @@ export class WorkspacePageComponent implements OnInit {
   private creoSessionService = inject(CreoSessionService);
   private workspaceService = inject(WorkspaceService);
   private itemService = inject(ItemService);
+  private itemNameService = inject(ItemNameService);
 
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
@@ -43,6 +48,9 @@ export class WorkspacePageComponent implements OnInit {
   workspaceItems = computed(() => this.workspaceService.workspaceFiles().value,)
   workspaceError = computed(() => this.workspaceService.workspaceFiles().error);
   selectedItems = signal<Item[]>([]);
+
+  displayNewItemNameComponent = signal(false);
+  isNewFileBeingCreated = signal(false);
 
   ngOnInit(): void {
     this.workspaceService.getWorkspaceFiles();
@@ -66,8 +74,46 @@ export class WorkspacePageComponent implements OnInit {
     this.creoSessionService.openCreoFiles(filePaths);
   }
 
-  startNewFileWindow() {
-    this.creoSessionService.startCreoNewFileWindow();
+  startNewFileCreation() {
+    this.isNewFileBeingCreated.set(true);
+    this.toggleNewItemNameComponentDisplay(true);
+  }
+
+  creaNewItemName(itemFamily: string) {
+    this.itemNameService.createItemName({ UserId: this.authService.user()?.id, ItemFamily: itemFamily } as CreateItemNameDto)
+      .subscribe(
+        {
+          next: itemName => {
+            alert(`Código gerado: ${itemName.itemName}`);
+
+            if (this.isNewFileBeingCreated()) {
+              this.startCreoNewFileWindow(itemName.itemName);
+            }
+
+            this.isNewFileBeingCreated.set(false);
+            this.toggleNewItemNameComponentDisplay(false);
+
+          },
+          error: error => alert(error.error.detail)
+        }
+      );
+  }
+
+  startCreoNewFileWindow(newFileName: string | null) {
+    this.creoSessionService.startCreoNewFileWindow(newFileName);
+  }
+
+  cancelItemNameCreation() {
+    this.toggleNewItemNameComponentDisplay(false);
+
+    if (this.isNewFileBeingCreated()) {
+      this.isNewFileBeingCreated.set(false);
+      this.startCreoNewFileWindow(null);
+    }
+  }
+
+  toggleNewItemNameComponentDisplay(displayComponent: boolean) {
+    this.displayNewItemNameComponent.set(displayComponent);
   }
 
   deleteAndCloseSelectedModels() {
@@ -87,7 +133,7 @@ export class WorkspacePageComponent implements OnInit {
     this.deleteWorkspaceFiles(ModelsToDelete);
 
     let itemsToDeleteRevision = this.selectedItems().filter(file => file.status == FileStatus[FileStatus.checkedOut]);
-    let itemsRevisionData: ItemRevisionData[] = itemsToDeleteRevision.map(item => { return { itemId: item.id, itemName: item.name, userId: this.authService.user()!.id} });
+    let itemsRevisionData: ItemRevisionData[] = itemsToDeleteRevision.map(item => { return { itemId: item.id, itemName: item.name, userId: this.authService.user()!.id } });
 
     this.itemService.uncheckoutItems(itemsRevisionData).subscribe(
       {
@@ -116,7 +162,7 @@ export class WorkspacePageComponent implements OnInit {
 
   private closeCreoModels(models: Model[]) {
     if (this.creoConnected()) {
-      let filePaths = models.map(model=> model.filePath);
+      let filePaths = models.map(model => model.filePath);
       this.creoSessionService.closeCreoFiles(filePaths);
     }
   }

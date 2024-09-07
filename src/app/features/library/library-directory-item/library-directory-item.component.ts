@@ -1,6 +1,6 @@
-import { Component, inject, input, output } from '@angular/core';
-import { LibraryDirectoryModel } from '../library-directory.model';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ItemFamily } from '../../../core/item-families/item-family';
 
 
 @Component({
@@ -11,6 +11,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './library-directory-item.component.scss'
 })
 export class LibraryDirectoryItemComponent {
-  directory = input.required<LibraryDirectoryModel>();
+  itemFamily = input.required<ItemFamily>();
 
 }

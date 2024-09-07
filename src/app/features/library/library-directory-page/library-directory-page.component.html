@@ -4,7 +4,7 @@
     <div class="d-flex align-items-end">
         <h4 class="pages-link" routerLink="/library">Library</h4>
         <h4 class="mx-1">/</h4>
-        <h5>{{directory()?.name}}</h5>
+        <h5>{{itemFamily()?.name}} - {{itemFamily()?.description}}</h5>
     </div>
     <app-library-toolbar [creoConnected]="creoConnected()" (openFileClicked)="openSelectedItems()" (newRevisionClicked)="CheckoutSelectedModels()"></app-library-toolbar>
     <div class="card d-flex flex-column flex-fill p-2 overflow-auto">

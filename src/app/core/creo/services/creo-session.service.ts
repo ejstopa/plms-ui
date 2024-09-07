@@ -109,9 +109,9 @@ export class CreoSessionService {
     return true;
   }
 
-  startCreoNewFileWindow() {
+  startCreoNewFileWindow(newFileName: string | null) {
     try {
-      startNewFileWindow(this.creSessionSignal());
+      startNewFileWindow(this.creSessionSignal(), newFileName);
     }
     catch (error) {
       alert("Ocorreu um erro ao tentar criar o arquivo");

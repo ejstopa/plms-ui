@@ -13,6 +13,7 @@ export class WorkspaceToolbarComponent {
   newFileClicked = output();
   openFileClicked = output();
   deleteFileClicked = output();
+  createItemNameClicked = output();
 
   onNewFileClicked() {
     this.newFileClicked.emit();
@@ -24,6 +25,10 @@ export class WorkspaceToolbarComponent {
 
   onDeleteFileClicked(){
     this.deleteFileClicked.emit();
+  }
+
+  onCreateItemNameClicked(){
+    this.createItemNameClicked.emit();
   }
 
 

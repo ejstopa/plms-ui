@@ -62,8 +62,17 @@ export function closeFile(creoSession, filePath){
     modelWindow.Close();
 }
 
-export function startNewFileWindow(creoSession){
-    creoSession.RunMacro("~ Command `ProCmdModelNew` ;");
+export function startNewFileWindow(creoSession, newFileName){
+    let command = "~ Command `ProCmdModelNew` ;";
+
+    if (newFileName != null){
+        const fileCommonName = `${newFileName.substring(0,4)}.${newFileName.substring(4)}`;
+        command = `${command} 
+        ~ Update \`new\` \`InputPanel1\` \`${newFileName}\`; 
+        ~ Update \`new\` \`InputPanel2\` \`${fileCommonName}\`; `
+    }
+
+    creoSession.RunMacro(command);
 }
 
 

@@ -1,9 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { LibraryService } from '../library.service';
 import { LibraryDirectoriesListComponent } from '../library-directories-list/library-directories-list.component';
 import { CreoSessionService } from '../../../core/creo/services/creo-session.service';
 import { LibraryToolbarComponent } from '../library-toolbar/library-toolbar.component';
+import { ItemFamilyService } from '../../../core/item-families/item-family.service';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { LibraryToolbarComponent } from '../library-toolbar/library-toolbar.comp
   styleUrl: './library-page.component.scss'
 })
 export class LibraryPageComponent {
-  private libraryService = inject(LibraryService);
+  private itemFamilyService = inject(ItemFamilyService);
   
-  activeDirectory = computed(() => this.libraryService.activeDirectory());
+  activeItemFamily = computed(() => this.itemFamilyService.activeItemFamily());
 }

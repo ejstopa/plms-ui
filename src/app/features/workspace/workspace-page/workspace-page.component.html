@@ -1,11 +1,18 @@
 <div class="d-flex flex-column h-100 p-2 overflow-auto main-pages-height">
     <h4>Workspace</h4>
-    <app-workspace-toolbar [creoConnected]="creoConnected()" (newFileClicked)="startNewFileWindow()"
-        (openFileClicked)="openSelectedItems()" (deleteFileClicked)="deleteAndCloseSelectedModels()">
+    <app-workspace-toolbar [creoConnected]="creoConnected()" (newFileClicked)="startNewFileCreation()"
+        (openFileClicked)="openSelectedItems()" (deleteFileClicked)="deleteAndCloseSelectedModels()"
+        (createItemNameClicked)="toggleNewItemNameComponentDisplay(true)">
     </app-workspace-toolbar>
     <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
-        <app-item-list [items]="workspaceItems()" [creoConnected]="creoConnected()" [allowItemReleases]="true" (selectedItemsChanged)="setSelectedItems($event)"/>
+        <app-item-list [items]="workspaceItems()" [creoConnected]="creoConnected()" [allowItemReleases]="true"
+            (selectedItemsChanged)="setSelectedItems($event)" />
     </div>
 </div>
 
 <app-loading></app-loading>
+
+@if(displayNewItemNameComponent()){
+<app-new-item-name (createIemNameClicked)="creaNewItemName($event)"
+    (cancelClicked)="cancelItemNameCreation()"></app-new-item-name>
+}

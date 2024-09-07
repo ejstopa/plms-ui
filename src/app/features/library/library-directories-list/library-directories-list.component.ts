@@ -1,8 +1,7 @@
 import { Component, computed, inject, input, OnInit } from '@angular/core';
 import { LibraryDirectoryItemComponent } from '../library-directory-item/library-directory-item.component';
-import { LibraryService } from '../library.service';
-import { LibraryDirectoryModel } from '../library-directory.model';
 import { Router } from '@angular/router';
+import { ItemFamilyService } from '../../../core/item-families/item-family.service';
 
 @Component({
   selector: 'app-library-directories-list',
@@ -13,12 +12,12 @@ import { Router } from '@angular/router';
 })
 export class LibraryDirectoriesListComponent implements OnInit{
   private router = inject(Router);
-  private libraryService = inject(LibraryService);
+  private itemFamilyService = inject(ItemFamilyService);
 
-  directories = computed(() => this.libraryService.directories());
+  itemFamilies = computed(()=> this.itemFamilyService.itemFamilies());
 
   ngOnInit(): void {
-    this.libraryService.setActiveDirectory(null);
+    this.itemFamilyService.setActiveItemFamily(null);
   }
  
 }

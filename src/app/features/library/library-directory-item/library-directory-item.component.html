@@ -1,6 +1,6 @@
 <div class="directory-descriptor d-flex align-items-center px-1"
-    [routerLink]="['/library', directory().name]">
+    [routerLink]="['/library', itemFamily().name]">
     <img class="img-folder" src="images/folder.png" alt="folder">
-    <span class="ms-1">- {{directory().name}}</span>
+    <span class="ms-1"> {{itemFamily().name}} - {{itemFamily().description}}</span>
 </div>
 <hr class="mx-1 my-1">
