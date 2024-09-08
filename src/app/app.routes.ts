@@ -8,6 +8,9 @@ import { WorkflowsPageComponent } from './features/workflows/workflows-page/work
 import { SearchPageComponent } from './features/search/search-page/search-page.component';
 import { LibraryDirectoriesListComponent } from './features/library/library-directories-list/library-directories-list.component';
 import { LibraryDirectoryPageComponent } from './features/library/library-directory-page/library-directory-page.component';
+import { MyWorkflowsComponent } from './features/workflows/my-workflows/my-workflows.component';
+import { MyWorkflowTasksComponent } from './features/workflows/my-workflow-tasks/my-workflow-tasks.component';
+import { AllWorkflowsComponent } from './features/workflows/all-workflows/all-workflows.component';
 
 export const routes: Routes = [
     {path: "", component:MainPageComponent, canActivate: [() => AuthGuard()], children:[
@@ -16,7 +19,12 @@ export const routes: Routes = [
         {path: "library", loadComponent: () => LibraryPageComponent},
         {path: "library/:itemFamilyName", component: LibraryDirectoryPageComponent},
         {path: "pesquisa", loadComponent: () => SearchPageComponent},
-        {path: "workflows", loadComponent: () => WorkflowsPageComponent}
+        {path: "workflows", loadComponent: () => WorkflowsPageComponent, children: [
+            {path: "", redirectTo:"meus-workflows", pathMatch: "full"},
+            {path: "meus-workflows", component: MyWorkflowsComponent},
+            {path: "minhas-tarefas", component: MyWorkflowTasksComponent},
+            {path: "todos", component: AllWorkflowsComponent}
+        ]}
     ] },
     {path: "login", component:LoginPageComponent}
 ];

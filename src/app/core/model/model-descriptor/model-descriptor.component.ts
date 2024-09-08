@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { Model } from '../model';
 import { CreoSessionService } from '../../creo/services/creo-session.service';
+import { FileDownloadService } from '../../file-download/file-download.service';
 
 @Component({
   selector: 'app-model-descriptor',
@@ -12,6 +13,7 @@ import { CreoSessionService } from '../../creo/services/creo-session.service';
 })
 export class ModelDescriptorComponent {
   creoSessionService = inject(CreoSessionService);
+  fileDownloadService = inject(FileDownloadService);
   model = input.required<Model>();
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
@@ -21,6 +23,15 @@ export class ModelDescriptorComponent {
     if (this.creoConnected()) {
       this.creoSessionService.openCreoFiles([this.model().filePath]);
     }
+  }
+
+  downLoadFile(){
+    let filePath = this.model().version ? 
+    `${this.model().filePath}.${this.model().version}` : 
+    this.model().filePath
+
+    this.fileDownloadService.downLoadFile(filePath, `${this.model().name}${this.model().type}`);
+    
   }
 
   private getModelTypeImgPath(model: Model) {

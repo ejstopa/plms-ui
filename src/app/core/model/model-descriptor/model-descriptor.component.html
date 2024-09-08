@@ -7,4 +7,8 @@
 <div [class.model-name]="creoConnected()" (click)="openModel()">
     {{model().name}}{{model().type}}
 </div>
+<span class="mx-2">|</span>
+<button class="btn m-0 py-1 px-0 mb-1" title="Fazer download do modelo" (click)="downLoadFile()">
+    <i class="fa-solid fa-download text-success"></i>
+</button>
 

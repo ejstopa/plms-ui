@@ -34,11 +34,11 @@ export class ItemDescriptorComponent {
     this.expanded.set(!this.expanded());
   }
 
-  expandItem(){
+  expandItem() {
     this.expanded.set(true);
   }
 
-  collapseItem(){
+  collapseItem() {
     this.expanded.set(false);
   }
 
@@ -48,27 +48,30 @@ export class ItemDescriptorComponent {
     }
   }
 
-  onSelectChange(){
-    if (!this.selected()){
+  onSelectChange() {
+    if (!this.selected()) {
       this.onSelect()
     }
-    else{
+    else {
       this.onUnselect();
     }
   }
 
-  onReleaseItemClicked(){
+  onReleaseItemClicked() {
 
-    if (!confirm("Deseja realmente liberar o item?")){
+    if (!confirm("Deseja realmente liberar o item?")) {
       return;
     }
 
-    this.workflowInstanceService.createWorkflowInstance(this.item().name).subscribe(
-      {
-        next: result => alert("Item enviado para o fluxo de liberação com sucesso"),
-        error: error => alert(error.error.detail)
-      }
-    )
+    if (this.item().family) {
+      this.workflowInstanceService.createWorkflowInstance(this.item().name).subscribe(
+        {
+          next: result => alert("Item enviado para o fluxo de liberação com sucesso"),
+          error: error => alert(error.error.detail || "Ocorreu um erro ao tentar liberar o item")
+        }
+      )
+    }
+
   }
 
   private onSelect() {

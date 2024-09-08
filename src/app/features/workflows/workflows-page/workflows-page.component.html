@@ -1,3 +1,7 @@
-<div class="h-100 p-2">
+<div class="d-flex flex-column h-100 p-2 overflow-auto main-pages-height">
     <h4>Workflows</h4>
+    <app-workflows-navbar/>
+    <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
+        <router-outlet></router-outlet>
+    </div>
 </div>
