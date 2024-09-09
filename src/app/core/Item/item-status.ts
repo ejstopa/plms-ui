@@ -1,5 +1,6 @@
 export enum ItemStatus {
     newItem,
     checkedOut,
-    released
+    released,
+    inWorkflow
 }

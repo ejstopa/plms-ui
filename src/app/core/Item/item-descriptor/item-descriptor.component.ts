@@ -58,20 +58,11 @@ export class ItemDescriptorComponent {
   }
 
   onReleaseItemClicked() {
-
     if (!confirm("Deseja realmente liberar o item?")) {
       return;
     }
 
-    if (this.item().family) {
-      this.workflowInstanceService.createWorkflowInstance(this.item().name).subscribe(
-        {
-          next: result => alert("Item enviado para o fluxo de liberação com sucesso"),
-          error: error => alert(error.error.detail || "Ocorreu um erro ao tentar liberar o item")
-        }
-      )
-    }
-
+    this.releaseItemClicked.emit(this.item());
   }
 
   private onSelect() {
@@ -93,7 +84,10 @@ export class ItemDescriptorComponent {
         statusImgPath = "images/checkout_revise.png";
         break;
       case ItemStatus[ItemStatus.released]:
-        statusImgPath = "images/completed.png";
+        statusImgPath = "images/released.png";
+        break;
+      case ItemStatus[ItemStatus.inWorkflow]:
+        statusImgPath = "images/in-workflow.png"
         break;
     }
     return statusImgPath;

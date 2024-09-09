@@ -17,6 +17,7 @@ import { NewItemNameComponent } from '../../../core/Item/new-item-name/new-item-
 import { ItemNameService } from '../../../core/Item/item-name.service';
 import { CreateItemNameDto } from '../../../core/Item/create_item_name_dto';
 import { ItemNameReservation } from '../../../core/Item/item-name-reservation';
+import { WorkflowInstanceService } from '../../workflows/workflow-instance.service';
 
 @Component({
   selector: 'app-workspace-page',
@@ -41,6 +42,7 @@ export class WorkspacePageComponent implements OnInit {
   private workspaceService = inject(WorkspaceService);
   private itemService = inject(ItemService);
   private itemNameService = inject(ItemNameService);
+  private workflowInstanceService = inject(WorkflowInstanceService);
 
 
   creoConnected = computed(() => this.creoSessionService.isConnected());
@@ -72,6 +74,20 @@ export class WorkspacePageComponent implements OnInit {
 
     let filePaths = this.selectedItems().flatMap(item => item.models.map(model => model.filePath));;
     this.creoSessionService.openCreoFiles(filePaths);
+  }
+
+  realeaseItem(item: Item) {
+    if (item.family) {
+      this.workflowInstanceService.createWorkflowInstance(item.name).subscribe(
+        {
+          next: result => {
+            alert("Item enviado para o fluxo de liberação com sucesso");
+            this.workspaceService.getWorkspaceFiles();
+          },
+          error: error => alert(error.error.detail || "Ocorreu um erro ao tentar liberar o item")
+        }
+      )
+    }
   }
 
   startNewFileCreation() {
@@ -127,7 +143,6 @@ export class WorkspacePageComponent implements OnInit {
     }
 
     let ModelsToDelete: Model[] = [];
-
     this.selectedItems().forEach(item => item.models.forEach(model => ModelsToDelete.push(model)));
 
     this.deleteWorkspaceFiles(ModelsToDelete);
@@ -141,9 +156,7 @@ export class WorkspacePageComponent implements OnInit {
       }
     );
 
-
     this.closeCreoModels(ModelsToDelete);
-
     this.workspaceService.getWorkspaceFiles();
   }
 

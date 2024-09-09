@@ -15,6 +15,7 @@ export class ItemListComponent {
   allowItemReleases = input(false);
   
   selectedItemsChanged = output<Item[]>();
+  releaseItemClicked = output<Item>();
 
   selectedItems = signal<Item[]>([]);
   itemDescriptors = viewChildren(ItemDescriptorComponent);
@@ -35,6 +36,10 @@ export class ItemListComponent {
     else{
       this.unselectAllItems();
     }
+  }
+
+  onReleaseItemClicked(item: Item){
+    this.releaseItemClicked.emit(item);
   }
 
   selectAllItems() {

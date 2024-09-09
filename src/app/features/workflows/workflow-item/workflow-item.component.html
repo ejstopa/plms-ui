@@ -1,1 +1,17 @@
-<p>workflow-item works!</p>
+<div class="workflow-descriptor d-flex align-items-center" (click)="toggleExpanded()">
+    <div class="ms-1 me-2">
+        <i class="fa-solid fa-angle-down fa-sm text-primary" [class.fa-rotate-270]="!expanded()"></i>
+    </div>
+    <div class="me-2">
+        <i class="fa-solid fa-diagram-project fa-sm text-success"></i>
+    </div>
+    <div >
+        {{workflow().itemName}} / {{workflow().itemRevision}}
+    </div>
+</div>
+@if (expanded()){
+    <div class="ms-3">
+        <app-item-descriptor [item]="workflow().item" [selected]="false"/>
+    </div>
+}
+<hr class="my-1">

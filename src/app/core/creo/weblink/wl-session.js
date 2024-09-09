@@ -40,7 +40,7 @@ export function listDirectoryFiles(creoSession, filter, path){
 export function openFile(creoSession, filePath){
     let modelDescriptorHandler = pfcCreate("pfcModelDescriptor");
     let modelDescriptor = modelDescriptorHandler.CreateFromFileName(filePath);
-    
+
     let model = creoSession.RetrieveModel(modelDescriptor);
     let window = creoSession.CreateModelWindow(model);
 
