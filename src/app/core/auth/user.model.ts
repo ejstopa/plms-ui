@@ -1,3 +1,5 @@
+import { UserRole } from "./user-role";
+
 export interface UserModel {
     id: number;
     name: string;
@@ -5,4 +7,5 @@ export interface UserModel {
     windowsUser: string;
     roleId: number;
     isActive: boolean;
+    userRole: UserRole;
 }

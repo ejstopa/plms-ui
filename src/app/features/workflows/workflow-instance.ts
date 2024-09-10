@@ -1,4 +1,5 @@
 import { Item } from "../../core/Item/item";
+import { WorkflowStep } from "./workflow-step";
 
 export interface WorkflowInstance {
     id: number;
@@ -13,4 +14,5 @@ export interface WorkflowInstance {
     message: string;
     itemFamilyId: number;
     item: Item;
+    steps: WorkflowStep[];
 }

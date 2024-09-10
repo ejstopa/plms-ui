@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { ApplicationModule, computed, inject, Injectable, signal } from '@angular/core';
 import { AuthService } from '../../core/auth/auth.service';
 import { LoadingService } from '../../core/loading/loading.service';
 import { environment } from '../../../environments/environment';
@@ -7,6 +7,7 @@ import { CreateWorkflowInstanceDto } from './create-workflow-instance-dto';
 import { finalize, take } from 'rxjs';
 import { WorkflowInstance } from './workflow-instance';
 import { HttpResult } from '../../core/interfaces/http-result';
+import { WorkflowStep } from './workflow-step';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,17 @@ export class WorkflowInstanceService {
         error: error => this.userWorkflowsSignal.set({value: null, error: error})
       }
     );
+  }
+
+  getWorkflowSteps(workflowId: number){
+    const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}/steps`;
+
+    this.loadingService.setLoadingStart();
+
+    return this.http.get<WorkflowStep[]>(apiUrl).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd())
+    )
+
   }
 }

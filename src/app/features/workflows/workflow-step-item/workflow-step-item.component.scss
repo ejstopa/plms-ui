@@ -1,0 +1,11 @@
+@use '../../../../scss-variables.scss' as variables;
+
+.wokflow-step-descriptor:hover{
+    cursor: pointer;
+    background-color: variables.$color-secondary;
+}
+
+.disabled{
+    pointer-events: none;
+    opacity: 0.7;
+}
