@@ -23,8 +23,8 @@ export class AuthService {
   error = computed(() => this.userResult().error);
 
   constructor() {
-    if (sessionStorage.getItem(this.tokenName)){
-      let user: UserModel = JSON.parse(sessionStorage.getItem(this.tokenName)!);
+    if (localStorage.getItem(this.tokenName)){
+      let user: UserModel = JSON.parse(localStorage.getItem(this.tokenName)!);
       this.userResult.set({value: user, error: null});
     }
   }
@@ -41,8 +41,8 @@ export class AuthService {
       ).subscribe({
         next: user => {
           this.userResult.set({ value: user, error: null });
-          sessionStorage.setItem(this.tokenName, JSON.stringify(user));
-        } ,
+          localStorage.setItem(this.tokenName, JSON.stringify(user));
+        },
         error: error => this.userResult.set({value: null, error: this.handleLoginError(error)}) 
       })
     }, 1000);
@@ -50,7 +50,12 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return sessionStorage.getItem(this.tokenName) != null;
+    return localStorage.getItem(this.tokenName) != null;
+  }
+
+  logOut(){
+    localStorage.removeItem(this.tokenName);
+    this.userResult.set({value: null, error: null})
   }
 
   private handleLoginError(error: HttpErrorResponse): HttpError {

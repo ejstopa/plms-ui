@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SideBarNavigatonService } from './side-bar-navigaton.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -10,6 +11,7 @@ import { SideBarNavigatonService } from './side-bar-navigaton.service';
   styleUrl: './side-bar.component.scss'
 })
 export class SideBarComponent {
+  private authService = inject(AuthService);
   private sideBarNavigatonService = inject(SideBarNavigatonService);
 
   expanded = signal(true);

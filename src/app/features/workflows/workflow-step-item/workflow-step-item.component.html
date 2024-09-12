@@ -14,20 +14,20 @@
                 <div class="mb-2">
                     <label class="form-label fs-6 mb-0" for=""><small>{{attribute.name}}</small></label>
                     @if (attribute.type == "typeSelect"){
-                    <select class="form-select form-select-sm" formControlName ="{{attribute.name}}">
+                    <select class="form-select form-select-sm" formControlName ="{{attribute.id}}">
                         @for(option of step().itemAttributes[$index].options; track $index){
                         <option value="{{option.name}}">{{option.name}}</option>
                         }
                     </select>
                     }
                     @else if (attribute.type == "typeYesNo") {
-                    <select class="form-select form-select-sm" formControlName ="{{attribute.name}}">
-                        <option value="SIM">NAO</option>
+                    <select class="form-select form-select-sm" formControlName ="{{attribute.id}}">
+                        <option value="NAO">NAO</option>
                         <option value="SIM">SIM</option>
                     </select>
                     }
                     @else{
-                    <input class="form-control form-control-sm" type="text" formControlName ="{{attribute.name}}">
+                    <input class="form-control form-control-sm" type="text" formControlName ="{{attribute.id}}">
                     }
         
                 </div>

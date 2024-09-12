@@ -1,4 +1,5 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +12,13 @@ export class SideBarNavigatonService {
 
   constructor() {
     this.setInitialActivePage();
-   }
-
-  setActivePage(activePage: string){
-    this.activePageSignal.set(activePage.toString());
-    sessionStorage.setItem("px-active-page", activePage);
   }
 
-  private setInitialActivePage(){
-    let activePage = sessionStorage.getItem(this.activePageToken);
+  setActivePage(activePage: string) {
+    this.activePageSignal.set(activePage.toString());
+  }
 
-    if (activePage == null){
-      this.activePageSignal.set("workspace");
-      return;
-    }
-
-    this.activePageSignal.set(activePage);
+  private setInitialActivePage() {
+    this.activePageSignal.set("workspace");
   }
 }

@@ -1,12 +1,12 @@
 <div class="d-flex shadow flex-column h-100 bg-primary text-secondary">
     <div class="p-1 d-flex flex-column flex-fill">
-        <div class="list-group p-0">         
-            <a class="list-group-item list-group-item-action px-2 py-1" routerLink="/workspace"
+        <div class="list-group p-0">  
+                <a class="list-group-item list-group-item-action px-2 py-1" routerLink="/workspace"
                 [class.active]="activePage()=='workspace'" (click)="setActivePage('workspace')" title="Workspace">
                 <i class="fa-solid fa-cubes"></i>
                 @if(expanded()){<span class="ms-1">Workspace</span>}
             </a>
-            <hr class="mx-2 my-0 p-0">
+            <hr class="mx-2 my-0 p-0">     
             <a class="list-group-item list-group-item-action px-2 py-1" routerLink="/library"
                 [class.active]="activePage()=='library'" (click)="setActivePage('library')" title="Library">
                 <i class="fa-solid fa-book"></i>
