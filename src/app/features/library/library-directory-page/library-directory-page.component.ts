@@ -11,6 +11,7 @@ import { ItemRevisionData } from '../../../core/Item/item-revision-data';
 import { ItemListComponent } from '../../../core/Item/item-list/item-list.component';
 import { Item } from '../../../core/Item/item';
 import { ItemFamilyService } from '../../../core/item-families/item-family.service';
+import { SideBarNavigatonService } from '../../../core/layout/side-bar/side-bar-navigaton.service';
 
 @Component({
   selector: 'app-library-directory-page',
@@ -21,6 +22,7 @@ import { ItemFamilyService } from '../../../core/item-families/item-family.servi
 })
 export class LibraryDirectoryPageComponent implements AfterViewInit {
   private authService = inject(AuthService);
+  private sideBarNavigatonService = inject(SideBarNavigatonService);
   private itemFamilyService = inject(ItemFamilyService);
   private itemService = inject(ItemService);
   private creoSessionService = inject(CreoSessionService);
@@ -39,6 +41,7 @@ export class LibraryDirectoryPageComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
+    this.sideBarNavigatonService.setActivePage("library");
     this.itemFamilyService.setActiveItemFamily(this.itemFamilyName);
     this.getItems();
   }

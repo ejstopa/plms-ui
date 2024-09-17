@@ -1,8 +1,9 @@
 <div class="card bg-success my-2 px-1 py-0">
     <nav class="nav align-items-center">
         @for(page of workflowsPages(); track $index){
-            <a class="nav-link fw-bold text-white p-0 m-1" [class.nav-link-active]="page.name == activePage().name" (click)="onPageChange(page)">{{page.name}}</a>
-            <span class="mx-2 text-white">|</span>
+        <a class="nav-link fw-bold text-white p-0 m-1" [class.nav-link-active]="page.name == activePage().name"
+            [title]="page.title" (click)="onPageChange(page)">{{page.name}}</a>
+        <span class="mx-2 text-white">|</span>
         }
     </nav>
 </div>

@@ -13,7 +13,7 @@ import { WorkflowInstanceValue } from '../workflow-instance-value';
   templateUrl: './workflow-item.component.html',
   styleUrl: './workflow-item.component.scss'
 })
-export class WorkflowItemComponent implements AfterViewInit{
+export class WorkflowItemComponent {
  
   workflowInstanceService = inject(WorkflowInstanceService);
 
@@ -24,12 +24,17 @@ export class WorkflowItemComponent implements AfterViewInit{
 
   expanded = false;
 
-  ngAfterViewInit(): void {
+  toggleExpanded() {
+    if (this.steps().length == 0){
+      this.getStepsAndsValues();
+    }
+   this.expanded = !this.expanded;
+  }
+
+  private getStepsAndsValues(){
     this.workflowInstanceService.getWorkflowSteps(this.workflow().id).subscribe(
       {
-        next: steps => {
-          this.steps.set(steps);
-        } 
+        next: steps => this.steps.set(steps)
       }
     );
 
@@ -38,10 +43,6 @@ export class WorkflowItemComponent implements AfterViewInit{
         next: values => this.workflowValues.set(values)
       }
     )
-  }
-  
-  toggleExpanded() {
-   this.expanded = !this.expanded;
   }
 
 }

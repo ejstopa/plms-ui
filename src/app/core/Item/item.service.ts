@@ -38,6 +38,14 @@ export class ItemService {
     );
   } 
 
+  createItem(workflowInstanceId: number){
+    this.loadingService.setLoadingStart();
+
+    return this.http.post(this.apiUrl, {WorkflowInstanceId: workflowInstanceId}).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd())
+    )
+  }
 
   CheckoutItems(itemsRevisionData: ItemRevisionData[]) {
     this.loadingService.setLoadingStart();

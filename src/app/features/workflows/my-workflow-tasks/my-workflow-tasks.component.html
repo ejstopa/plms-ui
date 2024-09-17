@@ -2,4 +2,15 @@
 <app-workflows-list [workFlows]="workFlows()!" />
 }
 
+@if (workFlows()?.length == 0 && !workFlowsError()){
+    <div class="d-flex h-100">
+        <small class="text-black-50 mx-auto my-auto">Você não tem tarefas pedentes</small>
+    </div>
+    }
+    @else if (workFlowsError()){
+    <div class="d-flex h-100">
+        <small class="text-danger mx-auto my-auto">Ocorreu um erro ao carregar as tarefas</small>
+    </div>
+    }
+
 <app-loading></app-loading>

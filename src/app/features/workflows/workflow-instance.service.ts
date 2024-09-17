@@ -131,7 +131,10 @@ export class WorkflowInstanceService {
       take(1),
       finalize(() => this.loadingService.setLoadingEnd()),
       tap({
-        next: result => this.getUserWorkflows()
+        next: result => {
+          this.getUserWorkflows();
+          this.getUserWorkflowsTasks();
+        } 
       })
     )
 

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { WorkflowsPagesService } from '../workflows-pages.service';
 
 @Component({
   selector: 'app-all-workflows',
@@ -7,6 +8,12 @@ import { Component } from '@angular/core';
   templateUrl: './all-workflows.component.html',
   styleUrl: './all-workflows.component.scss'
 })
-export class AllWorkflowsComponent {
+export class AllWorkflowsComponent implements OnInit {
+  workflowsPagesService = inject(WorkflowsPagesService);
+
+  ngOnInit(): void {
+    const activePage = this.workflowsPagesService.workflowsPages().find(pages => pages.name == "Todos Workflows")!;
+    this.workflowsPagesService.setActivePage(activePage);
+  }
 
 }

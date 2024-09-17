@@ -19,7 +19,7 @@
     </div>
     @for(step of steps(); track $index){
     <app-workflow-step-item [step]="step" [workflowValues]="workflowValues()" [workFlowUserId]="workflow().userId"
-        [workflowInstanceId]="workflow().id" [active]="step.id == activeStep()?.id" />
+        [workflowInstanceId]="workflow().id" [active]="step.id == activeStep()?.id" [isLastStep]="$index == steps().length - 1" />
     }
     }
 </div>

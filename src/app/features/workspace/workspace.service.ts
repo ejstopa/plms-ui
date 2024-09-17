@@ -17,8 +17,9 @@ export class WorkspaceService {
   private apiUrl = computed(() =>`${environment.pxApiUrl}/users/${this.authService.user()?.id}/workspace/items`);
   private workspaceFilesSignal = signal<HttpResult<Item[]>>({value: null, error:null});
 
-  workspaceFiles = computed(() => this.workspaceFilesSignal());
-
+  workspaceFiles = computed(() => this.workspaceFilesSignal().value);
+  workspaceFilesError = computed(() => this.workspaceFilesSignal().error);
+  
   constructor() { 
    
   }
@@ -34,7 +35,7 @@ export class WorkspaceService {
       finalize(() => this.loadingService.setLoadingEnd())
     ).subscribe({
       next: files => this.workspaceFilesSignal.set({value: files, error: null}),
-      error: error => alert(error)
+      error: error => this.workspaceFilesSignal.set({value: null, error: error})
     });
   }
 

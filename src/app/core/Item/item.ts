@@ -3,7 +3,8 @@ import { Model } from "../model/model";
 export interface Item {
     id: number;
     name: string;
-    lastRevision: string;
+    revision: string;
+    version: number;
     description: string;
     family: string;
     status: string;
@@ -12,6 +13,6 @@ export interface Item {
     lastModifiedBy: number;
     lastModifiedAt: Date;
     checkedOutBy: 1;
-    checkedOutAt: Date;
+    familyId: number,
     models: Model[];
 }

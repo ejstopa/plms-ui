@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { SideBarNavigatonService } from '../../../core/layout/side-bar/side-bar-navigaton.service';
 
 @Component({
   selector: 'app-search-page',
@@ -8,5 +9,10 @@ import { Component } from '@angular/core';
   styleUrl: './search-page.component.scss'
 })
 export class SearchPageComponent {
+  private sideBarNavigatonService = inject(SideBarNavigatonService);
+
+  ngOnInit(): void {
+    this.sideBarNavigatonService.setActivePage("search");
+  }
 
 }

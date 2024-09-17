@@ -6,9 +6,9 @@ import { WorkflowsPageData } from './workflows-page-data';
 })
 export class WorkflowsPagesService {
   private workflowsPagesSignal = signal<WorkflowsPageData[]>([
-    {name: "Meus Workflows", route: "/workflows/meus-workflows"},
-    {name: "Minhas Tarefas", route: "/workflows/minhas-tarefas"},
-    {name: "Todos Workflows", route: "/workflows/todos"}
+    {name: "Meus Workflows", route: "/workflows/meus-workflows", title: "Workflows ativos iniciados por você"},
+    {name: "Minhas Tarefas", route: "/workflows/minhas-tarefas", title: "Workflows com tarefas pendentes para você"},
+    {name: "Todos Workflows", route: "/workflows/todos", title: "Todos os workflow ativos"}
   ]);
   private activePageSignal = signal<WorkflowsPageData>(this.workflowsPagesSignal()[0]);
 

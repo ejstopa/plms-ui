@@ -18,6 +18,7 @@ import { ItemNameService } from '../../../core/Item/item-name.service';
 import { CreateItemNameDto } from '../../../core/Item/create_item_name_dto';
 import { ItemNameReservation } from '../../../core/Item/item-name-reservation';
 import { WorkflowInstanceService } from '../../workflows/workflow-instance.service';
+import { SideBarNavigatonService } from '../../../core/layout/side-bar/side-bar-navigaton.service';
 
 @Component({
   selector: 'app-workspace-page',
@@ -39,22 +40,23 @@ export class WorkspacePageComponent implements OnInit {
 
   private authService = inject(AuthService);
   private creoSessionService = inject(CreoSessionService);
+  private sideBarNavigatonService = inject(SideBarNavigatonService);
   private workspaceService = inject(WorkspaceService);
   private itemService = inject(ItemService);
   private itemNameService = inject(ItemNameService);
   private workflowInstanceService = inject(WorkflowInstanceService);
 
-
   creoConnected = computed(() => this.creoSessionService.isConnected());
   user = computed(() => this.authService.user());
-  workspaceItems = computed(() => this.workspaceService.workspaceFiles().value,)
-  workspaceError = computed(() => this.workspaceService.workspaceFiles().error);
+  workspaceItems = computed(() => this.workspaceService.workspaceFiles(),)
+  workspaceError = computed(() => this.workspaceService.workspaceFilesError());
+  
   selectedItems = signal<Item[]>([]);
-
   displayNewItemNameComponent = signal(false);
   isNewFileBeingCreated = signal(false);
 
   ngOnInit(): void {
+    this.sideBarNavigatonService.setActivePage("workspace");
     this.workspaceService.getWorkspaceFiles();
   }
 

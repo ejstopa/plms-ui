@@ -6,7 +6,17 @@
     </app-workspace-toolbar>
     <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
         <app-item-list [items]="workspaceItems()" [creoConnected]="creoConnected()" [allowItemReleases]="true"
-            (selectedItemsChanged)="setSelectedItems($event)" (releaseItemClicked)="realeaseItem($event)"/>
+            (selectedItemsChanged)="setSelectedItems($event)" (releaseItemClicked)="realeaseItem($event)" />
+        @if (workspaceItems()?.length == 0 && !workspaceError()){
+        <div class="d-flex h-100">
+            <small class="text-black-50 mx-auto my-auto">Não há nenhum item na workspace</small>
+        </div>
+        }
+        @else if (workspaceError()){
+            <div class="d-flex h-100">
+                <small class="text-danger mx-auto my-auto">Ocorreu um erro ao carregar os itens da workspace</small>
+            </div>
+        }
     </div>
 </div>
 

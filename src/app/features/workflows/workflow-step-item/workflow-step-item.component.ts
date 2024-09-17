@@ -7,6 +7,7 @@ import { CreateWorkflowValueDto } from '../create-workflow-value-dto';
 import { WorkflowInstanceService } from '../workflow-instance.service';
 import { WorkflowInstanceValue } from '../workflow-instance-value';
 import { ItemAttributeTypes } from '../../../core/Item/item-attribute-types';
+import { ItemService } from '../../../core/Item/item.service';
 
 @Component({
   selector: 'app-workflow-step-item',
@@ -18,12 +19,14 @@ import { ItemAttributeTypes } from '../../../core/Item/item-attribute-types';
 export class WorkflowStepItemComponent {
   authService = inject(AuthService);
   workflowInstanceService = inject(WorkflowInstanceService);
+  itemService = inject(ItemService);
 
   step = input.required<WorkflowStep>();
   workflowValues = input.required<WorkflowInstanceValue[]>();
   workFlowUserId = input.required<number>();
   workflowInstanceId = input.required<number>();
   active = input.required<boolean>();
+  isLastStep = input.required<boolean>();
 
   user = computed(() => this.authService.user());
   stepValues = computed(() => this.workflowValues().filter(value => this.step().itemAttributes.map(attribute => attribute.id).includes(value.itemAttributeId)));
@@ -92,6 +95,13 @@ export class WorkflowStepItemComponent {
             {
               next: result => {
                 alert("Etapa finalizada com sucesso");
+                
+                if (this.isLastStep()){
+                  this.itemService.createItem(result.id).subscribe({
+                      next: result => alert("Workflow finalizado"),
+                      error : error => alert("Ocorreu um erro ao finalizar o workflow")}
+                  )
+                }
                 this.toggleExpanded();
               }
             }

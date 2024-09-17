@@ -4,5 +4,6 @@ export interface ItemAttribute {
     id: number;
     name: string;
     type: string;
+    unit: string;
     options: ItemAttributeOption[];
 }
