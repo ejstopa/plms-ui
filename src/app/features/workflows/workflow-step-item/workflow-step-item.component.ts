@@ -1,4 +1,4 @@
-import { Component, computed, effect, Inject, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, Inject, inject, input, output, signal } from '@angular/core';
 import { WorkflowStep } from '../workflow-step';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { group } from '@angular/animations';
@@ -8,11 +8,12 @@ import { WorkflowInstanceService } from '../workflow-instance.service';
 import { WorkflowInstanceValue } from '../workflow-instance-value';
 import { ItemAttributeTypes } from '../../../core/Item/item-attribute-types';
 import { ItemService } from '../../../core/Item/item.service';
+import { WorkflowReturnComponent } from '../workflow-return/workflow-return.component';
 
 @Component({
   selector: 'app-workflow-step-item',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, WorkflowReturnComponent],
   templateUrl: './workflow-step-item.component.html',
   styleUrl: './workflow-step-item.component.scss'
 })
@@ -27,6 +28,9 @@ export class WorkflowStepItemComponent {
   workflowInstanceId = input.required<number>();
   active = input.required<boolean>();
   isLastStep = input.required<boolean>();
+  isReturnable = input.required<boolean>();
+
+  returnStepCliked = output();
 
   user = computed(() => this.authService.user());
   stepValues = computed(() => this.workflowValues().filter(value => this.step().itemAttributes.map(attribute => attribute.id).includes(value.itemAttributeId)));
@@ -68,9 +72,17 @@ export class WorkflowStepItemComponent {
     this.expanded.set(!this.expanded());
   }
 
+  onReturnStepCliked(){
+    this.returnStepCliked.emit();
+  }
+
   onFormSubmit() {
     if (this.stepForm.invalid) {
-      alert("form invalid");
+      alert("Todos os campos devem ser preenchidos");
+      return;
+    }
+
+    if (!confirm("Deseje realmente finalizar essa etapa do Workflow?")){
       return;
     }
 
@@ -91,7 +103,7 @@ export class WorkflowStepItemComponent {
     this.workflowInstanceService.createWorkflowValue(this.workflowInstanceId(), workflowValues).subscribe(
       {
         next: result => {
-          this.workflowInstanceService.finalizeStep(this.workflowInstanceId()).subscribe(
+          this.workflowInstanceService.completeStep(this.workflowInstanceId()).subscribe(
             {
               next: result => {
                 alert("Etapa finalizada com sucesso");
@@ -109,10 +121,8 @@ export class WorkflowStepItemComponent {
         }
       }
     );
-
-
-
   }
+
 
 
 

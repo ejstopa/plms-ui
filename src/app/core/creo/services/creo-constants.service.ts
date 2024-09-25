@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class CreoConstantsService {
 
   readonly workspaceBaseDirectoty = "c:/px-infrastructure/workspaces";
+  readonly WorkflowsBaseDirectoty = "c:/px-infrastructure/workflows";
   readonly libraryBaseDirectory = "c:/px-infrastructure/library";
   readonly librarySubFolders = [
     "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010",

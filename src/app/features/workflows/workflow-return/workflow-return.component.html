@@ -1,0 +1,24 @@
+<div class="workflow-return">
+    <div class="card shadow border border-primary p-2">
+     <div class="text-center mb-2">
+         <h4>Devolver Workflow</h4>
+     </div>
+     <div class="mb-2">
+         <label class="form-label mb-0" for="family-select">Escolha uma Etapa</label>
+         <select class="form-select" id="family-select" [(ngModel)]="selectedStepId">
+             @for (step of returnableSteps(); track $index){
+                 <option value={{step.id}}>{{step.name}}</option>
+             }
+         </select>
+         <div class="mb-2">
+            <label class="form-label mb-0" for="message">Mensagem</label>
+            <textarea class="form-control" cols="50" rows="3" id="message"  [(ngModel)]="message"></textarea>
+         </div>
+     </div>
+     <div class="d-flex">
+         <button class="btn btn-warning btn-sm border-primary border-1 me-1 w-50" (click)="onCancelClicked()">Cancelar</button>
+         <button class="btn btn-success btn-sm border-primary border-1 ms-1 w-50" (click)="onConfimrClicked()">Confirmar</button>
+     </div>
+    </div>
+ </div>
+ 

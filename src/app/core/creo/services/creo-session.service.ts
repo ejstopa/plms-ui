@@ -3,6 +3,7 @@ import { AuthService } from '../../auth/auth.service';
 import { getCreoSession, setWorkingDirectory, setConfigOption, openFile, closeFile, startNewFileWindow } from '../weblink/wl-session';
 import { CreoConstantsService } from './creo-constants.service';
 import { LoadingService } from '../../loading/loading.service';
+import { environment } from '../../../../environments/environment';
 
 
 @Injectable({
@@ -27,6 +28,7 @@ export class CreoSessionService {
     effect(() => {
       if (this.creSessionSignal()) {
         this.setUserWorkspace();
+        this.setWorkflowsSearchPath();
         this.setAllLibrarySearchPath();
       }
     })
@@ -58,10 +60,21 @@ export class CreoSessionService {
       this.creoConstantsService.librarySubFolders.forEach((subFolder) => {
         this.setFileSearchPath(`${this.creoConstantsService.libraryBaseDirectory}/${subFolder}`);
       });
+      
     }
     catch (error) {
       alert("Ocoreu um erro ao configurar os caminhos de busca de arquivos");
     }
+  }
+
+  private setWorkflowsSearchPath() {
+    try{
+      this.setFileSearchPath( `${this.creoConstantsService.WorkflowsBaseDirectoty}/${this.authService.user()?.windowsUser}`);
+    }
+    catch{
+      alert("Ocoreu um erro ao configurar o caminho do diretório de workflows");
+    }
+   
   }
 
   private setFileSearchPath(searchPath: string) {
@@ -82,7 +95,7 @@ export class CreoSessionService {
       }
       catch (error) {
         this.loadingService.setLoadingEnd();
-        alert(`Ocorreu um erro ao tentar abrir o arquivo: ${filePath}`);
+        alert(`Ocorreu um erro ao tentar abrir o arquivo: ${filePath.substring(filePath.lastIndexOf("\\") + 1)}`);
       }
     }
 

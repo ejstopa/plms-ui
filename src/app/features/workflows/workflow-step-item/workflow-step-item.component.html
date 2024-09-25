@@ -15,7 +15,7 @@
             <div class="mb-2">
                 <label class="form-label fs-6 mb-0" for=""><small>{{attribute.name}}</small></label>
                 @if (attribute.unit){
-                    <span class="ms-1"><small>({{attribute.unit}})</small></span>
+                <span class="ms-1"><small>({{attribute.unit}})</small></span>
                 }
                 @if (attribute.type == "typeSelect"){
                 <select class="form-select form-select-sm" formControlName="{{attribute.id}}">
@@ -30,19 +30,28 @@
                     <option value="SIM">SIM</option>
                 </select>
                 }
+                @else if(attribute.type == "typeNumber"){
+                <input class="form-control form-control-sm" type="number" formControlName="{{attribute.id}}">
+                }
                 @else{
                 <input class="form-control form-control-sm" type="text" formControlName="{{attribute.id}}">
                 }
 
             </div>
             }
-            <div class="d-flex">
-                <button class="btn btn-success btn-sm text-black border-black mt-1 ms-auto">Finalizar Etapa</button>
-            </div>
+            @if (active()){
+                <div class="d-flex align-items-center">
+                    @if (isReturnable()){
+                    <button class="btn btn-warning btn-sm text-black border-black mt-1  ms-auto me-2" type="button"
+                        (click)="onReturnStepCliked()">Devolver Etapa</button>
+                    }
+                    <button class="btn btn-success btn-sm text-black border-black mt-1"
+                        [class.ms-auto]="!isReturnable()" type="submit">
+                        Finalizar Etapa</button>
+                </div>
+            }
         </form>
     </div>
-
     }
-
 
 </div>

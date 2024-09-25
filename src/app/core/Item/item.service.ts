@@ -28,7 +28,7 @@ export class ItemService {
       map((items) => (
         {
           value: items.map(item => {
-            return { ...item, createdAt: new Date(item.createdAt), lastModifiedAt: new Date(item.lastModifiedAt) }
+            return { ...item, lastModifiedAt: new Date(item.lastModifiedAt) }
           }),
           error: null
         } as HttpResult<Item[]>)

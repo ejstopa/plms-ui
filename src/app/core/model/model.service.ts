@@ -27,7 +27,7 @@ export class ModelService {
       map((models) => (
         {
           value: models.map(model => {
-            return { ...model, createdAt: new Date(model.createdAt) }
+            return { ...model, lastModifiedAt: new Date(model.lastModifiedAt) }
           }),
           error: null
         } as HttpResult<Model[]>)

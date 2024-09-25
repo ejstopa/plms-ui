@@ -1,25 +1,52 @@
-<div class="card shadow p-1">
-    <div class="workflow-descriptor d-flex align-items-center p-1" (click)="toggleExpanded()">
-        <div class="ms-1 me-2">
-            <i class="fa-solid fa-angle-down fa-sm text-primary" [class.fa-rotate-270]="!expanded"></i>
+<div class="card shadow mb-1 p-1">
+    <div class="workflow-descriptor d-flex align-items-center p-1">
+        <div class="d-flex flex-fill align-items-center" (click)="toggleExpanded()">
+            <div class="ms-1 me-2">
+                <i class="fa-solid fa-angle-down fa-sm text-primary" [class.fa-rotate-270]="!expanded"></i>
+            </div>
+            <div class="me-2">
+                <i class="fa-solid fa-diagram-project fa-sm text-success"></i>
+            </div>
+            <div>
+                {{workflow().itemName}} / {{workflow().itemRevision}}
+            </div>
         </div>
-        <div class="me-2">
-            <i class="fa-solid fa-diagram-project fa-sm text-success"></i>
-        </div>
-        <div>
-            {{workflow().itemName}} / {{workflow().itemRevision}}
-        </div>
+        @if (workflow().message){
+        <button class="btn py-0" title="Mensagem">
+            <i class="fa-solid fa-circle-exclamation text-warning"></i>
+        </button>
+        }
+        @if (isDeletable()){
+        <button class="btn-delete-workflow btn text-primary ms-auto px-2 py-0" (click)="deleteWorkflow()">
+            <i class="fa-solid fa-trash-can" title="Excluir Workflow"></i>
+        </button>
+        }
     </div>
+
     @if (expanded){
-    <div class="ms-3">
+    <div class="mx-3">
         <app-item-descriptor [item]="workflow().item" [selected]="false" />
     </div>
+    @if (workflow().message){
+    <div class="mx-3">
+        <span class="fw-bold">Mensagem:</span>
+        <span class="ms-2">{{workflow().message}}</span>
+    </div>
+    <hr class="mx-3 my-2">
+    }
     <div class="text-center mt-3">
         <h5>Etapas do Fluxo</h5>
     </div>
     @for(step of steps(); track $index){
     <app-workflow-step-item [step]="step" [workflowValues]="workflowValues()" [workFlowUserId]="workflow().userId"
-        [workflowInstanceId]="workflow().id" [active]="step.id == activeStep()?.id" [isLastStep]="$index == steps().length - 1" />
+        [workflowInstanceId]="workflow().id" [active]="step.id == activeStep()?.id"
+        [isLastStep]="$index == steps().length - 1" [isReturnable]="isActiveStepReturnable()"
+        (returnStepCliked)="setWorkflowBeingReturned(true)" />
     }
     }
 </div>
+
+@if (isWorkflowBeingReturned()){
+<app-workflow-return [workflow]="workflow()" [workflowSteps]="steps()" [workflowValues]="workflowValues()"
+    (confirmClicked)="returnWorkflow($event)" (cancelClicked)="setWorkflowBeingReturned(false)"></app-workflow-return>
+}

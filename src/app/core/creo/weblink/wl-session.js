@@ -18,15 +18,15 @@ export function getCreoSession() {
     }
 }
 
-export function setWorkingDirectory(creoSession, directory){
+export function setWorkingDirectory(creoSession, directory) {
     creoSession.ChangeDirectory(directory);
 }
 
-export function setConfigOption(creoSession, name, value){
-    creoSession.SetConfigOption(name, value); 
+export function setConfigOption(creoSession, name, value) {
+    creoSession.SetConfigOption(name, value);
 }
 
-export function listDirectoryFiles(creoSession, filter, path){
+export function listDirectoryFiles(creoSession, filter, path) {
     const filesSeq = creoSession.ListFiles(filter, "FILE_LIST_LATEST", path);
     let files = [];
 
@@ -37,7 +37,7 @@ export function listDirectoryFiles(creoSession, filter, path){
     return files;
 }
 
-export function openFile(creoSession, filePath){
+export function openFile(creoSession, filePath) {
     let modelDescriptorHandler = pfcCreate("pfcModelDescriptor");
     let modelDescriptor = modelDescriptorHandler.CreateFromFileName(filePath);
 
@@ -48,13 +48,13 @@ export function openFile(creoSession, filePath){
     window.Activate();
 }
 
-export function closeFile(creoSession, filePath){
+export function closeFile(creoSession, filePath) {
     let modelDescriptorHandler = pfcCreate("pfcModelDescriptor");
     let modelDescriptor = modelDescriptorHandler.CreateFromFileName(filePath);
-    
+
     let model = creoSession.GetModelFromDescr(modelDescriptor);
 
-    if (model == null){
+    if (model == null) {
         return;
     }
 
@@ -62,11 +62,11 @@ export function closeFile(creoSession, filePath){
     modelWindow.Close();
 }
 
-export function startNewFileWindow(creoSession, newFileName){
+export function startNewFileWindow(creoSession, newFileName) {
     let command = "~ Command `ProCmdModelNew` ;";
 
-    if (newFileName != null){
-        const fileCommonName = `${newFileName.substring(0,4)}.${newFileName.substring(4)}`;
+    if (newFileName != null) {
+        const fileCommonName = `${newFileName.substring(0, 4)}.${newFileName.substring(4)}`;
         command = `${command} 
         ~ Update \`new\` \`InputPanel1\` \`${newFileName}\`; 
         ~ Update \`new\` \`InputPanel2\` \`${fileCommonName}\`; `

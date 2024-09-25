@@ -10,6 +10,7 @@ import { HttpResult } from '../../core/interfaces/http-result';
 import { WorkflowStep } from './workflow-step';
 import { CreateWorkflowValueDto } from './create-workflow-value-dto';
 import { WorkflowInstanceValue } from './workflow-instance-value';
+import { WorkflowReturnData } from './workflow-return-data';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,9 @@ export class WorkflowInstanceService {
   private authService = inject(AuthService);
   private loadingService = inject(LoadingService);
 
-  private userWorkflowsSignal = signal<HttpResult<WorkflowInstance[]>>({value: null, error: null});
-  private userTasksSignal = signal<HttpResult<WorkflowInstance[]>>({value: null, error: null});
-  
+  private userWorkflowsSignal = signal<HttpResult<WorkflowInstance[]>>({ value: null, error: null });
+  private userTasksSignal = signal<HttpResult<WorkflowInstance[]>>({ value: null, error: null });
+
   userWorkflows = computed(() => this.userWorkflowsSignal().value);
   userWorkflowsError = computed(() => this.userWorkflowsSignal().error);
 
@@ -44,7 +45,7 @@ export class WorkflowInstanceService {
 
   getUserWorkflows() {
     const apiUrl = `${environment.pxApiUrl}/users/${this.authService.user()!.id}/workflow-instances`;
-    
+
     this.loadingService.setLoadingStart();
 
     this.http.get<WorkflowInstance[]>(apiUrl).pipe(
@@ -52,15 +53,15 @@ export class WorkflowInstanceService {
       finalize(() => this.loadingService.setLoadingEnd())
     ).subscribe(
       {
-        next: result => this.userWorkflowsSignal.set({value: result, error: null}),
-        error: error => this.userWorkflowsSignal.set({value: null, error: error})
+        next: result => this.userWorkflowsSignal.set({ value: result, error: null }),
+        error: error => this.userWorkflowsSignal.set({ value: null, error: error })
       }
     );
   }
 
   getUserWorkflowsTasks() {
     const apiUrl = `${environment.pxApiUrl}/departments/${this.authService.user()?.roleId}/workflow-Tasks`;
-    
+
     this.loadingService.setLoadingStart();
 
     this.http.get<WorkflowInstance[]>(apiUrl).pipe(
@@ -69,14 +70,14 @@ export class WorkflowInstanceService {
     ).subscribe(
       {
         next: result => {
-          this.userTasksSignal.set({value: result, error: null});
+          this.userTasksSignal.set({ value: result, error: null });
         },
-        error: error => this.userTasksSignal.set({value: null, error: error})
+        error: error => this.userTasksSignal.set({ value: null, error: error })
       }
     );
   }
 
-  getWorkflowSteps(workflowId: number){
+  getWorkflowSteps(workflowId: number) {
     const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}/steps`;
 
     this.loadingService.setLoadingStart();
@@ -87,15 +88,15 @@ export class WorkflowInstanceService {
     )
   }
 
-  createWorkflowValue(workflowId: number, values: CreateWorkflowValueDto[]){
+  createWorkflowValue(workflowId: number, values: CreateWorkflowValueDto[]) {
     const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}/attibute-values`;
 
     this.loadingService.setLoadingStart();
 
-    let createActions$:  Observable<object>[] = [];
+    let createActions$: Observable<object>[] = [];
 
-    for (let value of values){
-      const {itemAttributeName, ...valueWithoutName} = value;
+    for (let value of values) {
+      const { itemAttributeName, ...valueWithoutName } = value;
 
       const valueCreation$ = this.http.post<CreateWorkflowValueDto>(apiUrl, valueWithoutName).pipe(
         take(1),
@@ -108,12 +109,12 @@ export class WorkflowInstanceService {
       createActions$.push(valueCreation$);
     }
 
-    return forkJoin([... createActions$]).pipe(
+    return forkJoin([...createActions$]).pipe(
       finalize(() => this.loadingService.setLoadingEnd())
     )
   }
 
-  getWorkflowValues(workflowId: number){
+  getWorkflowValues(workflowId: number) {
     const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}/attibute-values`;
 
     this.loadingService.setLoadingStart();
@@ -124,20 +125,56 @@ export class WorkflowInstanceService {
     )
   }
 
-  finalizeStep(workflowId: number){
-    const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}?incrementStep=true`;
+  completeStep(workflowId: number) {
+    const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}/step-completions`;
 
-    return this.http.put<WorkflowInstance>(apiUrl, {WorkflowInstanceId: workflowId}).pipe(
+    this.loadingService.setLoadingStart();
+
+    return this.http.post<WorkflowInstance>(apiUrl, null).pipe(
       take(1),
       finalize(() => this.loadingService.setLoadingEnd()),
       tap({
         next: result => {
           this.getUserWorkflows();
           this.getUserWorkflowsTasks();
-        } 
+        }
       })
     )
+  }
 
+  returnWorkflow(workflowReturnData: WorkflowReturnData) {
+    const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowReturnData.workflowInstanceId}/step-returns`;
+
+    this.loadingService.setLoadingStart();
+
+    return this.http.post(apiUrl, workflowReturnData).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd()),
+      tap({
+        next: result => {
+          this.getUserWorkflows();
+          this.getUserWorkflowsTasks();
+        }
+      })
+    );
+
+  }
+
+  deleteWorkflow(workflowId: number) {
+    const apiUrl = `${environment.pxApiUrl}/workflow-instances/${workflowId}`;
+
+    this.loadingService.setLoadingStart();
+
+    return this.http.delete(apiUrl).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd()),
+      tap({
+        next: result => {
+          this.getUserWorkflows();
+          this.getUserWorkflowsTasks();
+        }
+      })
+    )
   }
 
 
