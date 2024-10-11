@@ -41,7 +41,6 @@ export class LibraryDirectoryPageComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
-    this.sideBarNavigatonService.setActivePage("library");
     this.itemFamilyService.setActiveItemFamily(this.itemFamilyName);
     this.getItems();
   }

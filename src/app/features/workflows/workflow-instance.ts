@@ -13,6 +13,7 @@ export interface WorkflowInstance {
     status: string;
     message: string;
     itemFamilyId: number;
+    returnedBy: number;
     item: Item;
     steps: WorkflowStep[];
 }

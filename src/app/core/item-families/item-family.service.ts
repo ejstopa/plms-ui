@@ -4,8 +4,9 @@ import { AuthService } from '../auth/auth.service';
 import { LoadingService } from '../loading/loading.service';
 import { environment } from '../../../environments/environment';
 import { ItemFamily } from './item-family';
-import { take } from 'rxjs';
+import { finalize, take } from 'rxjs';
 import { HttpResult } from '../interfaces/http-result';
+import { ItemAttribute } from '../Item/item-attribute';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,15 @@ export class ItemFamilyService {
 
   setActiveItemFamily(itemFamilyName: string | null){
     this.activeItemFamilyNameSignal.set(itemFamilyName);
+  }
+
+  getItemFamilyAttributes(itemFamilyId: number){
+    this.loadingService.setLoadingStart();
+
+    return this.http.get<ItemAttribute[]>(`${this.apiUrl}/${itemFamilyId}/attributes`).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd())
+    )
   }
 
 

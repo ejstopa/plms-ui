@@ -4,7 +4,7 @@
         (openFileClicked)="openSelectedItems()" (deleteFileClicked)="deleteAndCloseSelectedModels()"
         (createItemNameClicked)="toggleNewItemNameComponentDisplay(true)">
     </app-workspace-toolbar>
-    <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
+    <div class="card shadow d-flex flex-column flex-fill p-2 overflow-auto">
         <app-item-list [items]="workspaceItems()" [creoConnected]="creoConnected()" [allowItemReleases]="true"
             (selectedItemsChanged)="setSelectedItems($event)" (releaseItemClicked)="realeaseItem($event)" />
         @if (workspaceItems()?.length == 0 && !workspaceError()){

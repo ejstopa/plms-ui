@@ -6,6 +6,7 @@ import { WorkflowStep } from '../workflow-step';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WorkflowInstanceService } from '../workflow-instance.service';
 import { WorkflowReturnData } from '../workflow-return-data';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-workflow-return',
@@ -15,6 +16,7 @@ import { WorkflowReturnData } from '../workflow-return-data';
   styleUrl: './workflow-return.component.scss'
 })
 export class WorkflowReturnComponent {
+  authService = inject(AuthService);
   workflowReturnService = inject(WorkflowReturnService);
 
   workflow = input.required<WorkflowInstance>();
@@ -45,7 +47,8 @@ export class WorkflowReturnComponent {
     const WorkflowReturnData: WorkflowReturnData = {
       workflowInstanceId: this.workflow().id,
       newStepId: Number(this.selectedStepId()),
-      message: `Devolvido por ${this.activeStep()?.name} - ${this.message()}` 
+      message: `Devolvido por ${this.activeStep()?.name} - ${this.message()}`,
+      returnedBy: this.authService.user()!.id
     }
     
     this.confirmClicked.emit(WorkflowReturnData);

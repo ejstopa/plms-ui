@@ -59,7 +59,7 @@ export class ItemService {
         take(1),
         tap({
           next: result => result.forEach(model => revisedModels.push(`${model.name}${model.type}`)),
-          error: error => alert(`Ocorreu um erro ao criar uma revisão para o item ${item.itemName}`)
+          error: error => alert(error.error.detail)
         })
       )
       reviseActions$.push(modelRevision$);

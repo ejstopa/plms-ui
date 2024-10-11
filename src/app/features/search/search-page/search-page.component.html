@@ -1,4 +1,16 @@
-<div class="h-100 p-2">
-    <h4>Pesquisa</h4>
+<div class="d-flex flex-column h-100 p-2 overflow-auto main-pages-height">
+    <h4 class="mb-3">Pesquisa</h4>
+    <div class="card shadow d-flex flex-fill overflow-auto">
+       <div class="row d-flex flex-fill overflow-auto">
+            <div class="col-md-6 col-12 border-end overflow-auto">
+                <app-search-builder/>
+            </div>
+            <div class="col-md-6 col-12 overflow-auto">
+                <app-search-results/>
+            </div>
+       </div>
+    </div>
 </div>
+
+<app-loading></app-loading>
 

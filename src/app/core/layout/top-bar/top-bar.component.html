@@ -1,15 +1,12 @@
 <header class="d-flex shadow px-2 py-1 bg-primary-dark border-bottom border-black text-secondary align-items-end">
     <img class="px-logo p-0 m-0" src="images/px-logo1.png" alt="logo">
-
     @if (isConnectedToCreo()){
     <div class="d-flex ms-auto me-3 mb-0 pb-0 align-items-end">
-        <small class="me-1 mb-0 pb-0">conectado</small>
-        <img class="creo-logo mb-1 border border-primary" src="images/creo-logo.png" alt="logo-creo">
+        <img class="creo-logo mb-1 border border-primary" src="images/creo-logo.png" alt="logo-creo" title="Conectado">
     </div>
     }
    
     <div class="dropdown" [class.ms-auto]="!isConnectedToCreo()">
-        <span class="mx-1 text-secondary ">|</span>
         <button class="btn text-secondary btn-sm py-0" type="button" data-bs-toggle="dropdown">
             <i class="fa-solid fa-user"></i>
             <span class="ms-1">{{user()?.name}}</span>

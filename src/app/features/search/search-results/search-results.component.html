@@ -1,0 +1,24 @@
+<div class="d-flex flex-column flex-fill">
+    <div class="card rounded-bottom-0 rounded-start-0 bg-success text-white text-center fw-bold py-1">
+        Resultados da Pesquisa
+    </div>
+    <div class="d-flex flex-column p-2">
+        @if (searchResultItems()){
+            @if (searchResultItems()!.length > 0){
+                @for (item of searchResultItems(); track $index){
+                    <app-item-descriptor [item]="item" [selected]="false" [allowSelection]="false"></app-item-descriptor>
+                }
+            }
+            @else {
+                <small class="text-center text-black-50">A pesquisa não retornou nenhum resultado</small>
+            }
+            }
+        @else if(searchResultError()){
+            <small class="text-center text-warning">{{searchResultError()?.message}}</small>
+        }
+        @else {
+            <small class="text-center text-black-50">Nenhuma pesquisa foi realizada</small>
+        }
+    </div>
+    
+</div>

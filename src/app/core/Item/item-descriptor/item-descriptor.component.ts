@@ -18,6 +18,7 @@ export class ItemDescriptorComponent {
   workflowInstanceService = inject(WorkflowInstanceService);
   item = input.required<Item>();
   allowItemReleases = input(false);
+  allowSelection = input(true);
 
   selectClicked = output<Item>();
   unselectClicked = output<Item>();
@@ -27,7 +28,11 @@ export class ItemDescriptorComponent {
   itemStatusImgPath = computed(() => this.getItemStatusImgPath(this.item()));
   expanded = signal(false);
   selected = input.required<boolean>();
-  selectedChanged = effect(() => ((this.selectCheckbox()?.nativeElement) as HTMLInputElement).checked = this.selected());
+  selectedChanged = effect(() => {
+    if (this.allowSelection()) {
+      ((this.selectCheckbox()?.nativeElement) as HTMLInputElement).checked = this.selected();
+    }
+  });
   selectCheckbox = viewChild<ElementRef>("selectCheckbox");
 
   toggleExpanded() {

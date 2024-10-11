@@ -25,7 +25,7 @@
 
     @if (expanded){
     <div class="mx-3">
-        <app-item-descriptor [item]="workflow().item" [selected]="false" />
+        <app-item-descriptor [item]="workflow().item" [selected]="false" [allowSelection]="false" />
     </div>
     @if (workflow().message){
     <div class="mx-3">
@@ -40,13 +40,18 @@
     @for(step of steps(); track $index){
     <app-workflow-step-item [step]="step" [workflowValues]="workflowValues()" [workFlowUserId]="workflow().userId"
         [workflowInstanceId]="workflow().id" [active]="step.id == activeStep()?.id"
-        [isLastStep]="$index == steps().length - 1" [isReturnable]="isActiveStepReturnable()"
-        (returnStepCliked)="setWorkflowBeingReturned(true)" />
+        [isLastStep]="$index == steps().length - 1" [isReturned]="isActiveStepReturned()"
+        [isReturnable]="isActiveStepReturnable()" (returnStepCliked)="setWorkflowBeingReturned(true)"
+        (rejectStepReturnClicked)="setReturnBeingRejected(true)" />
     }
     }
 </div>
 
 @if (isWorkflowBeingReturned()){
 <app-workflow-return [workflow]="workflow()" [workflowSteps]="steps()" [workflowValues]="workflowValues()"
-    (confirmClicked)="returnWorkflow($event)" (cancelClicked)="setWorkflowBeingReturned(false)"></app-workflow-return>
+    (confirmClicked)="returnWorkflow($event)" (cancelClicked)="setWorkflowBeingReturned(false)"/>
+}
+
+@if (isReturnBeingRejected()){
+    <app-workflow-return-rejection [userId]="user().id" [workflowId]="workflow().id" (confirmClicked)="rejectWorkflowReturn($event)" (cancelClicked)="setReturnBeingRejected(false)"/>
 }

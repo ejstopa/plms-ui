@@ -11,6 +11,8 @@ import { WorkflowStep } from './workflow-step';
 import { CreateWorkflowValueDto } from './create-workflow-value-dto';
 import { WorkflowInstanceValue } from './workflow-instance-value';
 import { WorkflowReturnData } from './workflow-return-data';
+import { HttpError } from '../../core/interfaces/http-error';
+import { WorkflowReturnRejectionData } from './workflow-return-rejection-data';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +24,16 @@ export class WorkflowInstanceService {
 
   private userWorkflowsSignal = signal<HttpResult<WorkflowInstance[]>>({ value: null, error: null });
   private userTasksSignal = signal<HttpResult<WorkflowInstance[]>>({ value: null, error: null });
+  private allworkflowsSignal = signal<HttpResult<WorkflowInstance[]>>({ value: null, error: null });
 
   userWorkflows = computed(() => this.userWorkflowsSignal().value);
   userWorkflowsError = computed(() => this.userWorkflowsSignal().error);
 
   userWorkflowsTasks = computed(() => this.userTasksSignal().value);
   userWorkflowsTasksError = computed(() => this.userTasksSignal().error);
+
+  allworkflows = computed(() => this.allworkflowsSignal().value);
+  allworkflowsError = computed(() => this.allworkflowsSignal().error);
 
   constructor() { }
 
@@ -73,6 +79,24 @@ export class WorkflowInstanceService {
           this.userTasksSignal.set({ value: result, error: null });
         },
         error: error => this.userTasksSignal.set({ value: null, error: error })
+      }
+    );
+  }
+
+  getAllWorkFlows() {
+    const apiuRL = `${environment.pxApiUrl}/workflow-instances`;
+
+    this.loadingService.setLoadingStart();
+
+    return this.http.get<WorkflowInstance[]>(apiuRL).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd())
+    ).subscribe(
+      {
+        next: result => {
+          this.allworkflowsSignal.set({ value: result, error: null });
+        },
+        error: error => this.allworkflowsSignal.set({ value: null, error: { message: "Ocoreu um erro ao carregar os workflows" } as HttpError })
       }
     );
   }
@@ -135,8 +159,7 @@ export class WorkflowInstanceService {
       finalize(() => this.loadingService.setLoadingEnd()),
       tap({
         next: result => {
-          this.getUserWorkflows();
-          this.getUserWorkflowsTasks();
+          this.updateWorkflowsInfo();
         }
       })
     )
@@ -152,12 +175,26 @@ export class WorkflowInstanceService {
       finalize(() => this.loadingService.setLoadingEnd()),
       tap({
         next: result => {
-          this.getUserWorkflows();
-          this.getUserWorkflowsTasks();
+          this.updateWorkflowsInfo();
         }
       })
     );
+  }
 
+  rejectWorkflowReturn(rejectionData: WorkflowReturnRejectionData){
+    const apiUrl = `${environment.pxApiUrl}/workflow-instances/${rejectionData.workflowInstanceId}/step-return-rejections`
+
+    this.loadingService.setLoadingStart();
+
+    return this.http.post(apiUrl, rejectionData).pipe(
+      take(1),
+      finalize(() => this.loadingService.setLoadingEnd()),
+      tap({
+        next: result => {
+          this.updateWorkflowsInfo();
+        }
+      })
+    )
   }
 
   deleteWorkflow(workflowId: number) {
@@ -170,13 +207,17 @@ export class WorkflowInstanceService {
       finalize(() => this.loadingService.setLoadingEnd()),
       tap({
         next: result => {
-          this.getUserWorkflows();
-          this.getUserWorkflowsTasks();
+          this.updateWorkflowsInfo();
         }
       })
     )
   }
 
+  private updateWorkflowsInfo() {
+    this.getUserWorkflows();
+    this.getUserWorkflowsTasks();
+    this.getAllWorkFlows();
+  }
 
 
 

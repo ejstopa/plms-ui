@@ -28,9 +28,11 @@ export class WorkflowStepItemComponent {
   workflowInstanceId = input.required<number>();
   active = input.required<boolean>();
   isLastStep = input.required<boolean>();
+  isReturned = input.required<boolean>();
   isReturnable = input.required<boolean>();
 
   returnStepCliked = output();
+  rejectStepReturnClicked = output();
 
   user = computed(() => this.authService.user());
   stepValues = computed(() => this.workflowValues().filter(value => this.step().itemAttributes.map(attribute => attribute.id).includes(value.itemAttributeId)));
@@ -74,6 +76,10 @@ export class WorkflowStepItemComponent {
 
   onReturnStepCliked(){
     this.returnStepCliked.emit();
+  }
+
+  onRejectStepReturnClicked(){
+    this.rejectStepReturnClicked.emit();
   }
 
   onFormSubmit() {

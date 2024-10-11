@@ -40,15 +40,20 @@
             </div>
             }
             @if (active()){
-                <div class="d-flex align-items-center">
-                    @if (isReturnable()){
-                    <button class="btn btn-warning btn-sm text-black border-black mt-1  ms-auto me-2" type="button"
-                        (click)="onReturnStepCliked()">Devolver Etapa</button>
-                    }
-                    <button class="btn btn-success btn-sm text-black border-black mt-1"
-                        [class.ms-auto]="!isReturnable()" type="submit">
-                        Finalizar Etapa</button>
-                </div>
+            <div class="d-flex align-items-center">
+                @if (isReturnable()){
+                <button class="btn btn-warning btn-sm text-black border-black mt-1  ms-auto me-2" type="button"
+                    (click)="onReturnStepCliked()">Devolver Workflow</button>
+                }
+                @else if (isReturned()){
+                <button class="btn btn-warning btn-sm text-black border-black mt-1  ms-auto me-2" type="button"
+                    (click)="onRejectStepReturnClicked()">Recusar Devolução</button>
+                }
+
+                <button class="btn btn-success btn-sm text-black border-black mt-1"
+                    [class.ms-auto]="!isReturnable() && !isReturned()" type="submit">
+                    Finalizar Etapa</button>
+            </div>
             }
         </form>
     </div>

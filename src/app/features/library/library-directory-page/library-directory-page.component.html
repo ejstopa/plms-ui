@@ -7,7 +7,7 @@
         <h5>{{itemFamily()?.name}} - {{itemFamily()?.description}}</h5>
     </div>
     <app-library-toolbar [creoConnected]="creoConnected()" (openFileClicked)="openSelectedItems()" (newRevisionClicked)="CheckoutSelectedModels()"></app-library-toolbar>
-    <div class="card d-flex flex-column flex-fill p-2 overflow-auto">
+    <div class="card shadow d-flex flex-column flex-fill p-2 overflow-auto">
         <app-item-list [items]="items()" [creoConnected]="creoConnected()" (selectedItemsChanged)="setSelectedItems($event)"/>
     </div>
 </div>

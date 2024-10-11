@@ -1,1 +1,16 @@
-<p>all-workflows works!</p>
+@if (workFlows()){
+<app-workflows-list [workFlows]="workFlows()!" />
+}
+
+@if (workFlows()?.length == 0 && !workFlowsError()){
+<div class="d-flex h-100">
+    <small class="text-black-50 mx-auto my-auto">Não há workflows para serrem exibidos</small>
+</div>
+}
+@else if (workFlowsError()){
+<div class="d-flex h-100">
+    <small class="text-danger mx-auto my-auto">Ocorreu um erro ao carregar os workflows</small>
+</div>
+}
+
+<app-loading></app-loading>

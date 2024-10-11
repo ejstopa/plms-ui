@@ -56,7 +56,6 @@ export class WorkspacePageComponent implements OnInit {
   isNewFileBeingCreated = signal(false);
 
   ngOnInit(): void {
-    this.sideBarNavigatonService.setActivePage("workspace");
     this.workspaceService.getWorkspaceFiles();
   }
 

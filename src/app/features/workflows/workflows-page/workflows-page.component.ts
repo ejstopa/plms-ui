@@ -10,11 +10,7 @@ import { SideBarNavigatonService } from '../../../core/layout/side-bar/side-bar-
   templateUrl: './workflows-page.component.html',
   styleUrl: './workflows-page.component.scss'
 })
-export class WorkflowsPageComponent implements OnInit{
+export class WorkflowsPageComponent {
   private sideBarNavigatonService = inject(SideBarNavigatonService);
   
-  ngOnInit(): void {
-    this.sideBarNavigatonService.setActivePage("workflows");
-  }
-
 }
