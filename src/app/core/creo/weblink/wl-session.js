@@ -48,6 +48,7 @@ export function openFile(creoSession, filePath) {
     window.Activate();
 }
 
+
 export function closeFile(creoSession, filePath) {
     let modelDescriptorHandler = pfcCreate("pfcModelDescriptor");
     let modelDescriptor = modelDescriptorHandler.CreateFromFileName(filePath);
